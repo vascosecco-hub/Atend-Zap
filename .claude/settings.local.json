@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(unzip -p PRD_Completo_v3_Atendimentos_WhatsApp.docx word/document.xml)",
+      "Bash(sed 's/<[^>]*>//g')",
+      "Bash(npx:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__get_advisors",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(npm uninstall:*)",
+      "Bash(curl -s http://localhost:3000/login)",
+      "Bash(curl:*)",
+      "Bash(vercel link:*)",
+      "Bash(vercel login:*)",
+      "Bash(vercel:*)",
+      "Read(//c/Users/Home/.vercel/**)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)"
+    ]
+  }
+}

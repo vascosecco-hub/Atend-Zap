@@ -1,83 +1,98 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import styles from './page.module.css'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useAuth } from '@/hooks/useAuth'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { HardHat, MessageCircle } from 'lucide-react'
 
-export default function LoginPage() {
+const loginSchema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(6, 'Mínimo 6 caracteres'),
+})
+
+export default function Login() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { login, isLoggingIn } = useAuth()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+  const form = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  })
 
-    const supabase = createClient()
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    setLoading(false)
-
-    if (error) {
-      setError(error.message)
-      return
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    try {
+      await login(values)
+      router.push('/crm')
+    } catch (error) {
+      form.setError('root', { message: 'Email ou senha incorretos' })
     }
-
-    router.push('/crm')
-    router.refresh()
   }
 
   return (
-    <main className={styles.main}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>CRM</h1>
-          <p className={styles.subtitle}>Acesse sua conta</p>
+    <main className="min-h-screen flex items-center justify-center">
+      {/* branding */}
+      <div className="absolute top-6 left-6 flex items-center gap-2">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/40">
+          <MessageCircle className="h-5 w-5 text-primary" />
+        </div>
+        <span className="font-display text-lg font-semibold tracking-tight">
+          Atend<span className="text-primary">Zap</span>
+        </span>
+      </div>
+
+      {/* login card */}
+      <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-[var(--gradient-card)] p-8" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <div className="text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/30">
+            <HardHat className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="mt-4 font-display text-2xl font-semibold">Acessar CRM</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Entre com suas credenciais</p>
         </div>
 
-        <form onSubmit={handleLogin} className={styles.form}>
-          <div className={styles.field}>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="seu@email.com"
-              required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="seu@email.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="password">Senha</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="••••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          {error && <p className={styles.error}>{error}</p>}
-
-          <button type="submit" className={styles.button} disabled={loading}>
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
-
-        <a href="/" className={styles.backLink}>
-          ← Voltar ao início
-        </a>
+            {form.formState.errors.root && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {form.formState.errors.root.message}
+              </div>
+            )}
+            <Button type="submit" className="w-full" disabled={isLoggingIn}>
+              {isLoggingIn ? 'Entrando...' : 'Entrar'}
+            </Button>
+          </form>
+        </Form>
       </div>
     </main>
   )

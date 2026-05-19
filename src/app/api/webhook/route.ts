@@ -2,13 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export async function POST(request: NextRequest) {
-  // 1. Optionally validate webhook secret (if provided in header)
-  // const secret = request.headers.get('x-webhook-secret')
-  // if (secret !== process.env.WEBHOOK_SECRET) {
-  //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  // }
-
-  // 2. Parse body
+  // Nota: GPT Maker não suporta headers customizados, autenticação removida
+  // 1. Parse body
   let body
   try {
     body = await request.json()
