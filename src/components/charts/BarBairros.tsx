@@ -64,7 +64,7 @@ export function BarBairros({ data, className = "" }: BarBairrosProps) {
             dataKey="count"
             fill="#38BDF8"
             radius={[0, 4, 4, 0]}
-            background={{ fill: "#27272a", radius: [0, 4, 4, 0] }}
+            background={{ fill: "#27272a", radius: "0, 4, 4, 0" }}
           />
         </BarChart>
       </ResponsiveContainer>
