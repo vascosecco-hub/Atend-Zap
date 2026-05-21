@@ -29,7 +29,14 @@
       "Bash(find src:*)",
       "Bash(xargs grep:*)",
       "Bash(grep -r \"signIn\\\\|login\\\\|auth\" src/lib --include=*.ts)",
-      "Bash(grep -r \"SUPABASE_SERVICE_ROLE_KEY\\\\|supabaseUrl\\\\|supabaseAnon\" src/ --include=*.ts)"
+      "Bash(grep -r \"SUPABASE_SERVICE_ROLE_KEY\\\\|supabaseUrl\\\\|supabaseAnon\" src/ --include=*.ts)",
+      "Bash(npm view:*)",
+      "Bash(npm run:*)",
+      "Bash(node -e \"const rdp = require\\(''react-day-picker''\\); console.log\\(Object.keys\\(rdp\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''day''\\) || k.toLowerCase\\(\\).includes\\(''button''\\)\\)\\)\")",
+      "Bash(node -e \"const rdp = require\\(''react-day-picker''\\); console.log\\(Object.keys\\(rdp\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''class''\\) || k.toLowerCase\\(\\).includes\\(''default''\\)\\)\\)\")",
+      "Bash(grep:*)",
+      "Bash(node:*)",
+      "Bash(powershell Compress-Archive -Path .next* -DestinationPath atend-zap-build.zip -Force)"
     ]
   }
 }

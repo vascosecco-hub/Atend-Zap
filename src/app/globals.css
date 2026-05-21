@@ -1,182 +1,14 @@
-@import "tailwindcss" source(none);
-@source "../src";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --background: var(--card);
-  --foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-whatsapp: var(--whatsapp);
-  --color-whatsapp-glow: var(--whatsapp-glow);
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
-}
-
-:root,
-[data-theme="dark"] {
-  --radius: 0.75rem;
-
-  --background: #000000;
-  --foreground: #ffffff;
-
-  --card: #0a0a0a;
-  --card-foreground: #ffffff;
-
-  --popover: #0a0a0a;
-  --popover-foreground: #ffffff;
-
-  --primary: #40cc6d;
-  --primary-foreground: #000000;
-
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ffffff;
-
-  --muted: #1a1a1a;
-  --muted-foreground: #9e9e9e;
-
-  --accent: #40cc6d;
-  --accent-foreground: #000000;
-
-  --destructive: #e62b34;
-  --destructive-foreground: #ffffff;
-
-  --border: #26262699;
-  --input: #1a1a1a;
-  --ring: #40cc6d;
-
-  --whatsapp: #40cc6d;
-  --whatsapp-glow: #45e77a;
-
-  --gradient-hero: radial-gradient(ellipse at top, #40cc6d26, transparent 60%);
-  --gradient-card: linear-gradient(180deg, #0c0c0c, #050505);
-  --gradient-accent: linear-gradient(135deg, #40cc6d, #20b46b);
-
-  --shadow-glow: 0 0 40px #40cc6d4d, 0 0 80px #40cc6d1f;
-  --shadow-card: 0 20px 50px -20px #00000099;
-
-  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[data-theme="light"] {
-  --radius: 0.75rem;
-
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-
-  --popover: #ffffff;
-  --popover-foreground: #0a0a0a;
-
-  --primary: #22a055;
-  --primary-foreground: #ffffff;
-
-  --secondary: #f5f5f5;
-  --secondary-foreground: #0a0a0a;
-
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-
-  --accent: #22a055;
-  --accent-foreground: #ffffff;
-
-  --destructive: #e62b34;
-  --destructive-foreground: #ffffff;
-
-  --border: #e5e5e599;
-  --input: #f5f5f5;
-  --ring: #22a055;
-
-  --whatsapp: #22a055;
-  --whatsapp-glow: #33cc77;
-
-  --gradient-hero: radial-gradient(ellipse at top, #22a0551a, transparent 60%);
-  --gradient-card: linear-gradient(180deg, #ffffff, #fafafa);
-  --gradient-accent: linear-gradient(135deg, #22a055, #1a8f4a);
-
-  --shadow-glow: 0 0 25px #22a05533, 0 0 50px #22a05514;
-
-  --shadow-card: 0 8px 30px -10px #0000001a;
-
-  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[data-theme="blue"] {
-  --radius: 0.75rem;
-
-  --background: #0f172a;
-  --foreground: #f0f4ff;
-
-  --card: #131f38;
-  --card-foreground: #f0f4ff;
-
-  --popover: #131f38;
-  --popover-foreground: #f0f4ff;
-
-  --primary: #38bdf8;
-  --primary-foreground: #0f172a;
-
-  --secondary: #1e2d4d;
-  --secondary-foreground: #f0f4ff;
-
-  --muted: #1e2d4d;
-  --muted-foreground: #94a3b8;
-
-  --accent: #38bdf8;
-  --accent-foreground: #0f172a;
-
-  --destructive: #e62b34;
-  --destructive-foreground: #ffffff;
-
-  --border: #33415599;
-  --input: #1e2d4d;
-  --ring: #38bdf8;
-
-  --whatsapp: #38bdf8;
-  --whatsapp-glow: #7dd3fc;
-
-  --gradient-hero: radial-gradient(ellipse at top, #38bdf82e, transparent 60%);
-  --gradient-card: linear-gradient(180deg, #1a2744, #0f172a);
-  --gradient-accent: linear-gradient(135deg, #38bdf8, #0ea5e9);
-
-  --shadow-glow: 0 0 40px #38bdf84d, 0 0 80px #38bdf81f;
-  --shadow-card: 0 20px 50px -20px #00000099;
-
-  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   * {
     border-color: var(--color-border);
   }
   html, body {
-    background-color: var(--background) !important;
-    color: var(--color-foreground) !important;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
@@ -189,12 +21,12 @@
 @layer utilities {
   .bg-grid {
     background-image:
-      linear-gradient(to right, oklch(1 0 0 / 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(1 0 0 / 0.04) 1px, transparent 1px);
+      linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
     background-size: 56px 56px;
   }
   .text-glow {
-    text-shadow: 0 0 30px oklch(0.78 0.18 150 / 0.5);
+    text-shadow: 0 0 30px rgba(76, 214, 118, 0.5);
   }
   .border-glow {
     box-shadow: var(--shadow-glow);
@@ -212,3 +44,106 @@
   50% { transform: translateY(-6px); }
 }
 .animate-float { animation: float 5s ease-in-out infinite; }
+
+:root,
+[data-theme="dark"] {
+  --radius: 0.75rem;
+  --background: #000;
+  --foreground: #fff;
+  --card: #0a0a0a;
+  --card-foreground: #fff;
+  --popover: #0a0a0a;
+  --popover-foreground: #fff;
+  --primary: #40cc6d;
+  --primary-foreground: #000;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #fff;
+  --muted: #1a1a1a;
+  --muted-foreground: #9e9e9e;
+  --accent: #40cc6d;
+  --accent-foreground: #000;
+  --destructive: #e62b34;
+  --destructive-foreground: #fff;
+  --border: #26262699;
+  --input: #1a1a1a;
+  --ring: #40cc6d;
+  --whatsapp: #40cc6d;
+  --whatsapp-glow: #45e77a;
+  --gradient-hero: radial-gradient(ellipse at top, rgba(64, 204, 109, 0.15), transparent 60%);
+  --gradient-card: linear-gradient(180deg, #0c0c0c, #050505);
+  --gradient-accent: linear-gradient(135deg, #40cc6d, #32b46b);
+  --shadow-glow: 0 0 40px rgba(64, 204, 109, 0.3), 0 0 80px rgba(64, 204, 109, 0.12);
+  --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+}
+
+[data-theme="light"] {
+  --radius: 0.75rem;
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #22a055;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #22a055;
+  --accent-foreground: #ffffff;
+  --destructive: #e62b34;
+  --destructive-foreground: #ffffff;
+  --border: #e5e5e599;
+  --input: #f5f5f5;
+  --ring: #22a055;
+  --whatsapp: #22a055;
+  --whatsapp-glow: #33cc77;
+  --gradient-hero: radial-gradient(ellipse at top, rgba(34, 160, 85, 0.1), transparent 60%);
+  --gradient-card: linear-gradient(180deg, #ffffff, #fafafa);
+  --gradient-accent: linear-gradient(135deg, #22a055, #1a8f4a);
+  --shadow-glow: 0 0 25px rgba(34, 160, 85, 0.2), 0 0 50px rgba(34, 160, 85, 0.08);
+  --shadow-card: 0 8px 30px -10px rgba(0, 0, 0, 0.1);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+}
+
+[data-theme="blue"] {
+  --radius: 0.75rem;
+  --background: #0f172a;
+  --foreground: #f0f4ff;
+  --card: #131f38;
+  --card-foreground: #f0f4ff;
+  --popover: #131f38;
+  --popover-foreground: #f0f4ff;
+  --primary: #38bdf8;
+  --primary-foreground: #0f172a;
+  --secondary: #1e2d4d;
+  --secondary-foreground: #f0f4ff;
+  --muted: #1e2d4d;
+  --muted-foreground: #94a3b8;
+  --accent: #38bdf8;
+  --accent-foreground: #0f172a;
+  --destructive: #e62b34;
+  --destructive-foreground: #ffffff;
+  --border: #33415599;
+  --input: #1e2d4d;
+  --ring: #38bdf8;
+  --whatsapp: #38bdf8;
+  --whatsapp-glow: #7dd3fc;
+  --gradient-hero: radial-gradient(ellipse at top, rgba(56, 189, 248, 0.18), transparent 60%);
+  --gradient-card: linear-gradient(180deg, #1a2744, #0f172a);
+  --gradient-accent: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  --shadow-glow: 0 0 40px rgba(56, 189, 248, 0.3), 0 0 80px rgba(56, 189, 248, 0.12);
+  --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+}
