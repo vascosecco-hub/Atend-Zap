@@ -25,7 +25,11 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(gh repo:*)",
-      "Bash(echo \"EXIT_CODE: $?\")"
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(find src:*)",
+      "Bash(xargs grep:*)",
+      "Bash(grep -r \"signIn\\\\|login\\\\|auth\" src/lib --include=*.ts)",
+      "Bash(grep -r \"SUPABASE_SERVICE_ROLE_KEY\\\\|supabaseUrl\\\\|supabaseAnon\" src/ --include=*.ts)"
     ]
   }
 }

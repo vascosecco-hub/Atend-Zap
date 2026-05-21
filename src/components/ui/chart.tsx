@@ -107,22 +107,24 @@ const ChartTooltipContent = React.forwardRef<
   (
     {
       active,
-      payload,
       className,
       indicator = "dot",
       hideLabel = false,
       hideIndicator = false,
-      label,
       labelFormatter,
       labelClassName,
       formatter,
       color,
       nameKey,
       labelKey,
+      ...props
     },
     ref,
   ) => {
     const { config } = useChart();
+    const p = props as any;
+    const payload: any[] = p.payload;
+    const tooltipLabelProp: any = p.label;
 
     const tooltipLabel = React.useMemo(() => {
       if (hideLabel || !payload?.length) {
@@ -130,11 +132,11 @@ const ChartTooltipContent = React.forwardRef<
       }
 
       const [item] = payload;
-      const key = `${labelKey || item?.dataKey || item?.name || "value"}`;
+      const key = `${labelKey || (item as any)?.dataKey || (item as any)?.name || "value"}`;
       const itemConfig = getPayloadConfigFromPayload(config, item, key);
       const value =
-        !labelKey && typeof label === "string"
-          ? config[label as keyof typeof config]?.label || label
+        !labelKey && typeof tooltipLabelProp === "string"
+          ? config[tooltipLabelProp as keyof typeof config]?.label || tooltipLabelProp
           : itemConfig?.label;
 
       if (labelFormatter) {
@@ -148,7 +150,7 @@ const ChartTooltipContent = React.forwardRef<
       }
 
       return <div className={cn("font-medium", labelClassName)}>{value}</div>;
-    }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+    }, [tooltipLabelProp, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
 
     if (!active || !payload?.length) {
       return null;
@@ -167,11 +169,11 @@ const ChartTooltipContent = React.forwardRef<
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
           {payload
-            .filter((item) => item.type !== "none")
-            .map((item, index) => {
-              const key = `${nameKey || item.name || item.dataKey || "value"}`;
+            .filter((item: any) => item.type !== "none")
+            .map((item: any, index: number) => {
+              const key = `${nameKey || (item as any).name || (item as any).dataKey || "value"}`;
               const itemConfig = getPayloadConfigFromPayload(config, item, key);
-              const indicatorColor = color || item.payload.fill || item.color;
+              const indicatorColor = color || (item as any).payload.fill || (item as any).color;
 
               return (
                 <div
@@ -243,13 +245,15 @@ const ChartLegend = RechartsPrimitive.Legend;
 
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+  React.ComponentProps<"div"> & {
       hideIcon?: boolean;
       nameKey?: string;
     }
->(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
+>(({ className, hideIcon = false, nameKey, ...props }, ref) => {
   const { config } = useChart();
+  const p = props as any;
+  const payload: any[] = p.payload;
+  const verticalAlign = p.verticalAlign || "bottom";
 
   if (!payload?.length) {
     return null;
@@ -265,9 +269,9 @@ const ChartLegendContent = React.forwardRef<
       )}
     >
       {payload
-        .filter((item) => item.type !== "none")
-        .map((item) => {
-          const key = `${nameKey || item.dataKey || "value"}`;
+        .filter((item: any) => item.type !== "none")
+        .map((item: any) => {
+          const key = `${nameKey || (item as any).dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
           return (
@@ -283,7 +287,7 @@ const ChartLegendContent = React.forwardRef<
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
                   style={{
-                    backgroundColor: item.color,
+                    backgroundColor: (item as any).color,
                   }}
                 />
               )}
