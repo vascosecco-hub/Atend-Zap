@@ -27,14 +27,14 @@ export async function POST(request: NextRequest) {
   const {
     nome,
     telefone,
-    nicho,
-    resumo_conversa,
-    produtos_citados,
+    resumo,
+    produtos,
+    endereco,
+    email,
     transferido_para,
     data_agendamento,
     hora_agendamento,
     tipo_atendimento,
-    endereco_entrega,
     numero_endereco,
     complemento,
     bairro_entrega,
@@ -45,28 +45,28 @@ export async function POST(request: NextRequest) {
   } = body
 
   // 5. Insert into atendimentos table
-  const { data: atendimento, error: atendimentoError } = await supabase
-    .from('atendimentos')
-    .insert({
-      nome,
-      telefone,
-      nicho,
-      resumo_conversa,
-      produtos_citados,
-      transferido_para,
-      data_agendamento,
-      hora_agendamento,
-      tipo_atendimento,
-      endereco_entrega,
-      numero_endereco,
-      complemento,
-      bairro_entrega,
-      regiao_entrega,
-      cep_entrega,
-      status_entrega: status_entrega || 'agendado',
-      observacao_entrega,
-      status: 'pendente',
-    })
+    const { data: atendimento, error: atendimentoError } = await supabase
+      .from('atendimentos')
+      .insert({
+        nome,
+        telefone,
+        nicho: 'construcao',
+        resumo_conversa: resumo || null,
+        produtos_citados: produtos || null,
+        transferido_para,
+        data_agendamento,
+        hora_agendamento,
+        tipo_atendimento,
+        endereco_entrega: endereco || null,
+        numero_endereco,
+        complemento,
+        bairro_entrega,
+        regiao_entrega,
+        cep_entrega,
+        status_entrega: status_entrega || 'agendado',
+        observacao_entrega,
+        status: 'pendente',
+      })
     .select()
     .single()
 

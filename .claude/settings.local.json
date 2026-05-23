@@ -36,7 +36,14 @@
       "Bash(node -e \"const rdp = require\\(''react-day-picker''\\); console.log\\(Object.keys\\(rdp\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''class''\\) || k.toLowerCase\\(\\).includes\\(''default''\\)\\)\\)\")",
       "Bash(grep:*)",
       "Bash(node:*)",
-      "Bash(powershell Compress-Archive -Path .next* -DestinationPath atend-zap-build.zip -Force)"
+      "Bash(powershell Compress-Archive -Path .next* -DestinationPath atend-zap-build.zip -Force)",
+      "Bash(npm list:*)",
+      "Bash(wc -c .next/static/css/*.css)",
+      "Bash(head -c 2000 .next/static/css/*.css)",
+      "Bash(find C:/Users/Home -maxdepth 2 -type d -name *crm* -o -name *nosso*)",
+      "WebFetch(domain:developer.gptmaker.ai)",
+      "Bash(dir /b \"C:\\\\Users\\\\Home\\\\atend-zap\\\\src\\\\app\")",
+      "mcp__claude_ai_Supabase__execute_sql"
     ]
   }
 }
