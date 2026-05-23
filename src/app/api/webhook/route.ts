@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
   // 6. Log access
   await supabase.from('logs_acesso').insert({
     acao: 'webhook_gpt_maker',
-    detalhes: { atendimento_id: atendimento.id, nicho },
+    detalhes: { atendimento_id: atendimento.id, nicho: 'construcao' },
     ip_address: request.headers.get('x-forwarded-for') || 'unknown',
     user_agent: request.headers.get('user-agent') || 'unknown',
   })
