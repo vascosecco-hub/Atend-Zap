@@ -60,6 +60,48 @@ export async function POST(request: NextRequest) {
     const toolName = params?.name || params?.tool;
     const args = params?.arguments || params?.args || {};
 
+    // =============================================
+    // Handler para método 'initialize' do MCP
+    // =============================================
+    if (method === 'initialize') {
+      result = {
+        protocolVersion: '2024-11-05',
+        capabilities: {
+          tools: {},
+          resources: {}
+        },
+        serverInfo: {
+          name: 'AtendZap',
+          version: '1.0.0'
+        },
+        instructions: 'Registra atendimentos WhatsApp no CRM. Use as ferramentas coletar_dados_cliente, coletar_endereco, registrar_produtos, agendar_atendimento e registrar_atendimento.'
+      };
+      return NextResponse.json({
+        jsonrpc: '2.0',
+        id,
+        result
+      });
+    }
+
+    // =============================================
+    // Handler para método 'tools/list' do MCP
+    // =============================================
+    if (method === 'tools/list') {
+      const { tools } = await import('@/lib/mcp/tools');
+      result = {
+        tools: tools.map(t => ({
+          name: t.name,
+          description: t.description,
+          inputSchema: t.inputSchema
+        }))
+      };
+      return NextResponse.json({
+        jsonrpc: '2.0',
+        id,
+        result
+      });
+    }
+
     switch (toolName) {
       case 'coletar_dados_cliente': {
         const { nome, telefone, email } = args;
