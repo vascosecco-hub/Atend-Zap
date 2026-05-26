@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { useAuth, logAccess } from '@/hooks/useAuth'
 import { createSupabaseClient } from '@/lib/supabase'
 import { type Atendimento, type Nicho, type StatusAtendimento } from '@/lib/types'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, startOfDay, endOfDay, addDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
   Table,
@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MessageCircle, Clock, CheckCircle, Package, Search, Filter, Download } from 'lucide-react'
+import { toast } from 'sonner'
 
 const supabase = createSupabaseClient()
 
@@ -55,6 +56,36 @@ export default function CRMDashboard() {
       logAccess('visualizou_crm')
     }
   }, [isLoading, session, router])
+
+  // Buscar lembretes do dia (hoje e amanhã) e mostrar toast
+  useEffect(() => {
+    if (!session) return
+
+    const buscarLembretes = async () => {
+      const hoje = startOfDay(new Date())
+      const amanha = endOfDay(addDays(new Date(), 1))
+
+      const { data: lembretes } = await supabase
+        .from('atendimentos')
+        .select('id, nome, telefone, lembrete, lembrete_data, nicho')
+        .not('lembrete', 'is', null)
+        .not('lembrete_data', 'is', null)
+        .gte('lembrete_data', hoje.toISOString())
+        .lte('lembrete_data', amanha.toISOString())
+        .eq('status', 'encerrado')
+
+      if (lembretes && lembretes.length > 0) {
+        lembretes.forEach((lembrete) => {
+          toast.info(`📌 LIGAR AGORA: ${lembrete.nome ?? 'Cliente'} - ${lembrete.lembrete}`, {
+            description: lembrete.telefone ? `Tel: ${lembrete.telefone}` : undefined,
+            duration: 10000,
+          })
+        })
+      }
+    }
+
+    buscarLembretes()
+  }, [session])
 
   const { data: atendimentos, isLoading: isLoadingAtendimentos } = useQuery({
     queryKey: ['atendimentos', filters],
@@ -305,6 +336,8 @@ export default function CRMDashboard() {
                   <TableHead className="text-muted-foreground">Data</TableHead>
                   <TableHead className="text-muted-foreground">Hora</TableHead>
                   <TableHead className="text-muted-foreground">Endereço</TableHead>
+                  <TableHead className="text-muted-foreground">Produtos</TableHead>
+                  <TableHead className="text-muted-foreground">Resumo</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -322,6 +355,12 @@ export default function CRMDashboard() {
                     <TableCell className="text-muted-foreground">{at.hora_agendamento ?? '—'}</TableCell>
                     <TableCell className="text-muted-foreground text-xs max-w-[200px] truncate">
                       {at.endereco_entrega ? `${at.endereco_entrega}${at.numero_endereco ? `, ${at.numero_endereco}` : ''}` : '—'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-xs max-w-[150px] truncate" title={at.produtos_citados ?? undefined}>
+                      {at.produtos_citados ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-xs max-w-[200px] truncate" title={at.resumo_conversa ?? undefined}>
+                      {at.resumo_conversa ?? '—'}
                     </TableCell>
                   </TableRow>
                 ))}
