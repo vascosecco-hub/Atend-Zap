@@ -356,12 +356,12 @@ export default function CRMDashboard() {
                     <TableCell className="text-muted-foreground text-xs max-w-[200px] truncate">
                       {at.endereco_entrega ? `${at.endereco_entrega}${at.numero_endereco ? `, ${at.numero_endereco}` : ''}` : '—'}
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-xs max-w-[150px] truncate" title={at.produtos_citados ?? undefined}>
-                      {at.produtos_citados ?? '—'}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-xs max-w-[200px] truncate" title={at.resumo_conversa ?? undefined}>
-                      {at.resumo_conversa ?? '—'}
-                    </TableCell>
+                    <TableCell className="text-muted-foreground text-xs max-w-[150px]">
+    <span className="block break-words whitespace-normal">{at.produtos_citados ?? '—'}</span>
+  </TableCell>
+  <TableCell className="text-muted-foreground text-xs max-w-[200px]">
+  <span className="block break-words whitespace-normal">{at.resumo_conversa ?? '—'}</span>
+  </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
