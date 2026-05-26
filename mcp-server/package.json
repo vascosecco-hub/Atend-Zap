@@ -1,0 +1,20 @@
+{
+  "name": "atendzap-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server para registrar atendimentos WhatsApp no CRM",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -75,8 +75,8 @@ export default function Dashboard() {
   })
 
   // Bar chart: atendimentos por nicho
-  const barData = Object.entries(nicheLabels).map((key) => ({
-    name: key === 'construcao' ? 'Materiais' : key === 'gastronomia' ? 'Gastronomia' : key === 'medico' ? 'Médico' : 'PetShop',
+  const barData = Object.entries(nicheLabels).map(([key, label]) => ({
+    name: label,
     value: atendimentos?.filter((a) => a.nicho === key).length ?? 0,
     fill: nicheColors[key],
   }))

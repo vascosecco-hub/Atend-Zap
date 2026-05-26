@@ -43,7 +43,9 @@
       "Bash(find C:/Users/Home -maxdepth 2 -type d -name *crm* -o -name *nosso*)",
       "WebFetch(domain:developer.gptmaker.ai)",
       "Bash(dir /b \"C:\\\\Users\\\\Home\\\\atend-zap\\\\src\\\\app\")",
-      "mcp__claude_ai_Supabase__execute_sql"
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(head -31 \"C:\\\\Users\\\\Home\\\\atend-zap\\\\src\\\\app\\\\\\(protected\\)\\\\crm\\\\page.tsx\")"
     ]
   }
 }
