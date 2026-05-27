@@ -8,10 +8,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { format, subDays, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import {
-  ChartContainer,
-  ChartTooltipContent,
-} from '@/components/ui/chart'
+ import {
+    ChartContainer,
+  } from '@/components/ui/chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, PieChart, LineChart, TrendingUp, Package, MessageCircle, Calendar } from 'lucide-react'
 import {
@@ -217,7 +216,7 @@ export default function Dashboard() {
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                     <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
                     <YAxis allowDecimals={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
-                    <Tooltip content={<ChartTooltipContent hideLabel />} />
+                    <Tooltip />
                     <Bar dataKey="value" radius={[6, 6, 0, 0]} />
                   </RechartsBar>
                 </ResponsiveContainer>
