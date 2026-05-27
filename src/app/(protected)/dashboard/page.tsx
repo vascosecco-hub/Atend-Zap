@@ -49,7 +49,8 @@ const nicheLabels: Record<string, string> = {
 export default function Dashboard() {
   const router = useRouter()
   const { session, isLoading } = useAuth()
-  const [dateRange, setDateRange] = useState(30)
+   const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 const [nichoFilter, setNichoFilter] = useState<string>('todos')
   useEffect(() => {
     if (isLoading) return
@@ -62,12 +63,13 @@ const [nichoFilter, setNichoFilter] = useState<string>('todos')
 
   // Fetch atendimentos for analytics
   const { data: atendimentos } = useQuery({
-    queryKey: ['dashboard-atendimentos', dateRange, nichoFilter],
+    queryKey: ['dashboard-atendimentos', startDate, endDate, nichoFilter],
     queryFn: async () => {
       let query = supabase
         .from('atendimentos')
         .select('*')
-        .gte('created_at', format(subDays(new Date(), dateRange), 'yyyy-MM-dd'))
+        .gte('created_at', startDate || format(subDays(new Date(), 30), 'yyyy-MM-dd'))
+  .lte('created_at', endDate ? endDate + 'T23:59:59' : format(new Date(), 'yyyy-MM-dd'))
 
       if (nichoFilter !== 'todos') {
         query = query.eq('nicho', nichoFilter)
@@ -158,22 +160,22 @@ const [nichoFilter, setNichoFilter] = useState<string>('todos')
   </div>
 
   {/* Date range selector */}
-  <div className="flex items-center gap-3">
-    <span className="text-sm text-muted-foreground">Período:</span>
-          {[7, 15, 30].map((days) => (
-            <button
-              key={days}
-              onClick={() => setDateRange(days)}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                dateRange === days
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card text-muted-foreground hover:bg-accent'
-              }`}
-            >
-              {days} dias
-            </button>
-          ))}
-        </div>
+    <div className="flex items-center gap-3 flex-wrap">
+      <span className="text-sm text-muted-foreground">De:</span>
+      <input 
+        type="date" 
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+        className="bg-card text-foreground px-3 py-1 rounded border border-border"
+      />
+      <span className="text-sm text-muted-foreground">Até:</span>
+      <input 
+        type="date" 
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+        className="bg-card text-foreground px-3 py-1 rounded border border-border"
+      />
+    </div>
 
         {/* Stats cards */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -184,7 +186,7 @@ const [nichoFilter, setNichoFilter] = useState<string>('todos')
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalAtendimentos}</div>
-              <p className="text-xs text-muted-foreground">últimos {dateRange} dias</p>
+              <p className="text-xs text-muted-foreground">Período selecionado</p> 
             </CardContent>
           </Card>
           <Card>
