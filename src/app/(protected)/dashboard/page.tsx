@@ -145,7 +145,12 @@ const [nichoFilter, setNichoFilter] = useState<string>('todos')
       <main className="px-6 py-6 space-y-6">
         {/* Nich filter */}
   <div className="flex items-center gap-3">
-    <span className="text-sm text-muted-foreground">NichO:</span>
+    <a href="/crm" className="px-3 py-1 text-sm bg-card hover:bg-accent rounded border border-border">CRM</a>
+    <a href="/dashboard" className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded border
+  border-primary">Dashboard</a>
+    <a href="/" className="px-3 py-1 text-sm bg-card hover:bg-accent rounded border border-border">Home</a>
+    <span className="text-sm text-muted-foreground ml-3">{session?.user?.email}</span>
+  </div>
     <select 
       value={nichoFilter}
       onChange={(e) => setNichoFilter(e.target.value)}
