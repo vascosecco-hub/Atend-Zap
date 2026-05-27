@@ -50,7 +50,7 @@ export default function Dashboard() {
   const router = useRouter()
   const { session, isLoading } = useAuth()
   const [dateRange, setDateRange] = useState(30)
-
+const [nichoFilter, setNichoFilter] = useState<string>('todos')
   useEffect(() => {
     if (isLoading) return
     if (!session) {
@@ -62,13 +62,18 @@ export default function Dashboard() {
 
   // Fetch atendimentos for analytics
   const { data: atendimentos } = useQuery({
-    queryKey: ['dashboard-atendimentos', dateRange],
+    queryKey: ['dashboard-atendimentos', dateRange, nichoFilter],
     queryFn: async () => {
-      const since = format(subDays(new Date(), dateRange), 'yyyy-MM-dd')
-      const { data } = await supabase
+      let query = supabase
         .from('atendimentos')
         .select('*')
-        .gte('created_at', since)
+        .gte('created_at', format(subDays(new Date(), dateRange), 'yyyy-MM-dd'))
+
+      if (nichoFilter !== 'todos') {
+        query = query.eq('nicho', nichoFilter)
+      }
+
+      const { data } = await query
       return data ?? []
     },
   })
@@ -136,9 +141,25 @@ export default function Dashboard() {
       </header>
 
       <main className="px-6 py-6 space-y-6">
-        {/* Date range selector */}
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">Período:</span>
+        {/* Nich filter */}
+  <div className="flex items-center gap-3">
+    <span className="text-sm text-muted-foreground">NichO:</span>
+    <select 
+      value={nichoFilter}
+      onChange={(e) => setNichoFilter(e.target.value)}
+      className="bg-card text-foreground px-3 py-1 rounded border border-border"
+    >
+      <option value="todos">Todos</option>
+      <option value="construcao">Materiais</option>
+      <option value="gastronomia">Gastronomia</option>
+      <option value="medico">Médico</option>
+      <option value="petshop">PetShop</option>
+    </select>
+  </div>
+
+  {/* Date range selector */}
+  <div className="flex items-center gap-3">
+    <span className="text-sm text-muted-foreground">Período:</span>
           {[7, 15, 30].map((days) => (
             <button
               key={days}
