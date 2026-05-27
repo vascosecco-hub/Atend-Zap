@@ -1,0 +1,3 @@
+<IfModule LiteSpeed>
+  LSCacheEngine off
+  </IfModule>
