@@ -1,6 +1,7 @@
 {
   "name": "atend-zap",
   "version": "1.0.0",
+  // rebuild trigger
   "private": true,
   "scripts": {
     "dev": "next dev",
