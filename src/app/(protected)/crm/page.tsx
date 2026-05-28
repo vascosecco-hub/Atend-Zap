@@ -58,7 +58,7 @@ export default function CRMDashboard() {
   const [lembreteMensagem, setLembreteMensagem] = useState('')
 
   const { lembretes, createLembrete, updateStatus, isCreating } = useLembretes(selectedAtendimento?.id)
-  const { checkAlarms } = useAlarmCheck(session)
+  const { checkAlarms } = useAlarmCheck(session ?? null)
 
   // Verificar alarms a cada 10 segundos
   useEffect(() => {
