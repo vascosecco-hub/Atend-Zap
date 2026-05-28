@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { useAuth, logAccess } from '@/hooks/useAuth'
+import { useLembretes, useAlarmCheck } from '@/hooks/useLembretes'
 import { createSupabaseClient } from '@/lib/supabase'
-import { type Atendimento, type Nicho, type StatusAtendimento } from '@/lib/types'
+import { type Atendimento, type Nicho, type StatusAtendimento, type TipoLembrete, type Lembrete } from '@/lib/types'
 import { format, parseISO, startOfDay, endOfDay, addDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -26,7 +27,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { MessageCircle, Clock, CheckCircle, Package, Search, Filter, Download } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { MessageCircle, Clock, CheckCircle, Package, Search, Filter, Download, TrendingUp, Home, Users, Bell, BellRing } from 'lucide-react'
 import { toast } from 'sonner'
 
 const supabase = createSupabaseClient()
@@ -47,6 +49,25 @@ export default function CRMDashboard() {
   const router = useRouter()
   const { session, user, isLoading } = useAuth()
   const [filters, setFilters] = useState<Filters>({})
+  const [selectedAtendimento, setSelectedAtendimento] = useState<Atendimento | null>(null)
+  const [showLembreteModal, setShowLembreteModal] = useState(false)
+  const [editingLembrete, setEditingLembrete] = useState<Lembrete | null>(null)
+  const [lembreteTipo, setLembreteTipo] = useState<TipoLembrete>('interno')
+  const [lembreteData, setLembreteData] = useState('')
+  const [lembreteHora, setLembreteHora] = useState('')
+  const [lembreteMensagem, setLembreteMensagem] = useState('')
+
+  const { lembretes, createLembrete, updateStatus, isCreating } = useLembretes(selectedAtendimento?.id)
+  const { checkAlarms } = useAlarmCheck(session)
+
+  // Verificar alarms a cada 10 segundos
+  useEffect(() => {
+    if (!session) return
+    // Verificar imediatamente ao abrir
+    checkAlarms()
+    const interval = setInterval(checkAlarms, 10000)
+    return () => clearInterval(interval)
+  }, [session])
 
   useEffect(() => {
     if (isLoading) return
@@ -151,6 +172,69 @@ export default function CRMDashboard() {
     URL.revokeObjectURL(url)
   }
 
+  function openLembreteModal(at: Atendimento) {
+    setSelectedAtendimento(at)
+    setEditingLembrete(null)
+    setLembreteTipo('interno')
+    setLembreteData('')
+    setLembreteHora('')
+    setLembreteMensagem('')
+    setShowLembreteModal(true)
+  }
+
+  function openEditLembreteModal(lembrete: Lembrete, at: Atendimento) {
+    setSelectedAtendimento(at)
+    setEditingLembrete(lembrete)
+    setLembreteTipo(lembrete.tipo_envio)
+    const dt = new Date(lembrete.data_hora_agendada)
+    setLembreteData(format(dt, 'yyyy-MM-dd'))
+    setLembreteHora(format(dt, 'HH:mm'))
+    setLembreteMensagem(lembrete.mensagem)
+    setShowLembreteModal(true)
+  }
+
+  async function handleSaveLembrete() {
+    if (!selectedAtendimento || !lembreteData || !lembreteHora || !lembreteMensagem.trim()) {
+      toast.error('Preencha todos os campos')
+      return
+    }
+
+    const dataHora = new Date(`${lembreteData}T${lembreteHora}:00`)
+
+    if (editingLembrete) {
+      // Editar lembrete existente
+      await supabase
+        .from('lembretes')
+        .update({
+          tipo_envio: lembreteTipo,
+          mensagem: lembreteMensagem.trim(),
+          data_hora_agendada: dataHora.toISOString(),
+        })
+        .eq('id', editingLembrete.id)
+      toast.success('Lembrete atualizado')
+    } else {
+      // Criar novo lembrete
+      await createLembrete({
+        atendimento_id: selectedAtendimento.id,
+        tipo_envio: lembreteTipo,
+        mensagem: lembreteMensagem.trim(),
+        data_hora_agendada: dataHora.toISOString(),
+      })
+    }
+
+    setShowLembreteModal(false)
+  }
+
+  async function handleDeleteLembrete(lembreteId: string) {
+    if (!confirm('Tem certeza que deseja apagar este lembrete?')) return
+    await supabase.from('lembretes').delete().eq('id', lembreteId)
+    toast.success('Lembrete apagado')
+  }
+
+  function getLembretesDoAtendimento(atendimentoId: string) {
+    return lembretes?.filter((l) => l.atendimento_id === atendimentoId) ?? []
+  }
+
   function formatDate(dateStr: string | null) {
     if (!dateStr) return '—'
     try {
@@ -186,66 +270,66 @@ export default function CRMDashboard() {
   return (
     <div className="min-h-screen">
       {/* header */}
-      <header className="flex items-center justify-between border-b border-border/40 px-6 py-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/40">
-            <MessageCircle className="h-5 w-5 text-primary" />
-          </div>
-          <span className="font-display text-lg font-semibold tracking-tight">
-            Atend<span className="text-primary">Zap</span>
-          </span>
-          <span className="ml-3 text-sm text-muted-foreground">/ CRM</span>
+      <header className="flex items-center justify-between mb-6 p-4 rounded-lg" style={{ backgroundColor: '#1a1a1a', border: '3px solid #444' }}>
+        <div className="flex items-center gap-3">
+          <MessageCircle className="h-6 w-6 text-blue-400" />
+          <span className="text-xl font-bold text-white">AtendZap</span>
+          <span className="text-sm text-gray-400">/ CRM</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">{session?.user?.email}</span>
-          <Button variant="outline" size="sm" onClick={handleExport} disabled={!atendimentos?.length}>
-            <Download className="mr-2 h-4 w-4" />
-            Exportar CSV
-          </Button>
+          <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#333', color: '#fff', border: '2px solid #555' }}>
+            <Home className="h-4 w-4" /> Página Inicial
+          </a>
+          <span className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#2563EB', color: '#fff', border: '2px solid #1D4ED8' }}>
+            <Users className="h-4 w-4" /> CRM
+          </span>
+          <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#333', color: '#fff', border: '2px solid #555' }}>
+            <TrendingUp className="h-4 w-4" /> Dashboard
+          </a>
         </div>
       </header>
 
       <main className="px-6 py-6 space-y-6">
         {/* stats */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <Card>
+          <Card className="card-3d">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total</CardTitle>
-              <MessageCircle className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium" style={{ color: '#FFFAF0' }}>Total</CardTitle>
+              <MessageCircle className="h-4 w-4" style={{ color: '#2E8B57' }} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
-              <p className="text-xs text-muted-foreground">atendimentos</p>
+              <div className="text-2xl font-bold" style={{ color: '#FFFAF0' }}>{stats.total}</div>
+              <p className="text-xs" style={{ color: '#A9A9A9' }}>atendimentos</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="card-3d">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Pendentes</CardTitle>
+              <CardTitle className="text-sm font-medium" style={{ color: '#FFFAF0' }}>Pendentes</CardTitle>
               <Clock className="h-4 w-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-yellow-400">{stats.pendente}</div>
-              <p className="text-xs text-muted-foreground">aguardando ação</p>
+              <p className="text-xs" style={{ color: '#A9A9A9' }}>aguardando ação</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="card-3d">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Agendados</CardTitle>
+              <CardTitle className="text-sm font-medium" style={{ color: '#FFFAF0' }}>Agendados</CardTitle>
               <Clock className="h-4 w-4 text-blue-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-400">{stats.agendado}</div>
-              <p className="text-xs text-muted-foreground">com data marcada</p>
+              <p className="text-xs" style={{ color: '#A9A9A9' }}>com data marcada</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="card-3d">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Concluídos</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-400" />
+              <CardTitle className="text-sm font-medium" style={{ color: '#FFFAF0' }}>Concluídos</CardTitle>
+              <CheckCircle className="h-4 w-4" style={{ color: '#2E8B57' }} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-400">{stats.entregue}</div>
-              <p className="text-xs text-muted-foreground">entregue e finalizado</p>
+              <div className="text-2xl font-bold" style={{ color: '#2E8B57' }}>{stats.entregue}</div>
+              <p className="text-xs" style={{ color: '#A9A9A9' }}>entregue e finalizado</p>
             </CardContent>
           </Card>
         </div>
@@ -316,7 +400,7 @@ export default function CRMDashboard() {
 
         {/* table */}
         <div className="rounded-xl border border-border/40 bg-[var(--gradient-card)] overflow-hidden">
-          {isLoading ? (
+          {isLoadingAtendimentos ? (
             <div className="flex items-center justify-center py-12 text-muted-foreground">
               Carregando atendimentos...
             </div>
@@ -328,47 +412,183 @@ export default function CRMDashboard() {
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-border/40 hover:bg-transparent">
-                  <TableHead className="text-muted-foreground">Nome</TableHead>
-                  <TableHead className="text-muted-foreground">Telefone</TableHead>
-                  <TableHead className="text-muted-foreground">NichO</TableHead>
-                  <TableHead className="text-muted-foreground">Status</TableHead>
-                  <TableHead className="text-muted-foreground">Data</TableHead>
-                  <TableHead className="text-muted-foreground">Hora</TableHead>
-                  <TableHead className="text-muted-foreground">Endereço</TableHead>
-                  <TableHead className="text-muted-foreground">Produtos</TableHead>
-                  <TableHead className="text-muted-foreground">Resumo</TableHead>
+                <TableRow style={{ backgroundColor: '#555', borderBottom: '2px solid #888' }}>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Nome</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Telefone</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>NichO</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Status</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Data</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Hora</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Endereço</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Produtos</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Resumo</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Lembretes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {atendimentos?.map((at) => (
-                  <TableRow key={at.id} className="border-border/40">
-                     <TableCell className="font-medium">{at.nome ?? '—'}</TableCell>
-                    <TableCell className="text-muted-foreground">{at.telefone ?? '—'}</TableCell>
-                    <TableCell className="text-muted-foreground">{nichoLabel[at.nicho] ?? at.nicho ?? '—'}</TableCell>
-                    <TableCell>
-                      <span className={`text-sm font-medium ${statusColor[at.status ?? ''] ?? 'text-muted-foreground'}`}>
+                {atendimentos?.map((at) => {
+                  const lembretesDoAt = getLembretesDoAtendimento(at.id)
+                  const pendentes = lembretesDoAt.filter((l) => l.status === 'pendente').length
+                  return (
+                  <TableRow key={at.id} style={{ borderBottom: '2px solid #888', backgroundColor: '#555' }}>
+                    <TableCell className="font-medium" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.nome ?? '—'}</TableCell>
+                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.telefone ?? '—'}</TableCell>
+                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{nichoLabel[at.nicho] ?? at.nicho ?? '—'}</TableCell>
+                    <TableCell style={{ borderBottom: '1px solid #888' }}>
+                      <span className={`text-sm font-medium ${statusColor[at.status ?? ''] ?? ''}`}>
                         {statusLabel[at.status ?? ''] ?? at.status ?? '—'}
                       </span>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{formatDate(at.data_agendamento)}</TableCell>
-                    <TableCell className="text-muted-foreground">{at.hora_agendamento ?? '—'}</TableCell>
-                    <TableCell className="text-muted-foreground text-xs max-w-[200px] truncate">
+                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{formatDate(at.data_agendamento)}</TableCell>
+                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.hora_agendamento ?? '—'}</TableCell>
+                    <TableCell className="text-xs max-w-[200px] truncate" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
                       {at.endereco_entrega ? `${at.endereco_entrega}${at.numero_endereco ? `, ${at.numero_endereco}` : ''}` : '—'}
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-xs max-w-[150px]">
-    <span className="block break-words whitespace-normal">{at.produtos_citados ?? '—'}</span>
-  </TableCell>
-  <TableCell className="text-muted-foreground text-xs max-w-[200px]">
-  <span className="block break-words whitespace-normal">{at.resumo_conversa ?? '—'}</span>
-  </TableCell>
+                    <TableCell className="text-xs max-w-[150px]" style={{ borderBottom: '1px solid #888' }}>
+                      <span className="block break-words whitespace-normal" style={{ color: '#FFFAF0' }}>{at.produtos_citados ?? '—'}</span>
+                    </TableCell>
+                    <TableCell className="text-xs max-w-[200px]" style={{ borderBottom: '1px solid #888' }}>
+                      <span className="block break-words whitespace-normal" style={{ color: '#FFFAF0' }}>{at.resumo_conversa ?? '—'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        {lembretesDoAt.length > 0 ? (
+                          <>
+                            {lembretesDoAt.map((lembrete) => {
+                              const tipoIcon = lembrete.tipo_envio === 'interno' ? '🔔' : lembrete.tipo_envio === 'whatsapp' ? '💬' : '✉️'
+                              const tipoLabel = lembrete.tipo_envio === 'interno' ? 'Int' : lembrete.tipo_envio === 'whatsapp' ? 'WA' : 'Email'
+                              const statusColor = lembrete.status === 'pendente' ? 'text-yellow-400' : lembrete.status === 'concluido' || lembrete.status === 'enviado' ? 'text-green-400' : 'text-gray-400'
+                              const statusLabel = lembrete.status === 'pendente' ? '⏳' : lembrete.status === 'concluido' ? '✅' : lembrete.status === 'enviado' ? '📤' : '❌'
+                              const dataFormatada = format(new Date(lembrete.data_hora_agendada), "dd/MM/yyyy HH:mm")
+                              return (
+                                <div key={lembrete.id} className="text-xs bg-slate-800 rounded p-1.5 flex items-center justify-between gap-2">
+                                  <div className="flex flex-col gap-0.5 min-w-0">
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-muted-foreground">{tipoIcon} [{tipoLabel}]</span>
+                                      <span className="text-gray-400 text-[10px]">{dataFormatada}</span>
+                                    </div>
+                                    <div className="text-gray-200 truncate">{lembrete.mensagem}</div>
+                                    <div className="text-[10px]">
+                                      <span className={statusColor}>{statusLabel}</span>
+                                      <span className="text-gray-500 ml-1">{lembrete.status}</span>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => openEditLembreteModal(lembrete, at)}
+                                    className="text-blue-400 hover:text-blue-300 flex-shrink-0"
+                                    title="Editar lembrete"
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteLembrete(lembrete.id)}
+                                    className="text-red-400 hover:text-red-300 flex-shrink-0"
+                                    title="Apagar lembrete"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              )
+                            })}
+                          </>
+                        ) : null}
+                        <button
+                          onClick={() => openLembreteModal(at)}
+                          className="flex items-center gap-1 text-xs px-2 py-1 rounded"
+                          style={{ backgroundColor: '#2563EB', color: '#fff' }}
+                        >
+                          <Bell className="h-3 w-3" />
+                          {lembretesDoAt.length > 0 ? 'Add' : 'Lembrete'}
+                        </button>
+                      </div>
+                    </TableCell>
                   </TableRow>
-                ))}
+                )})}
               </TableBody>
             </Table>
           )}
         </div>
       </main>
+
+      {/* Modal de Lembrete */}
+      <Dialog open={showLembreteModal} onOpenChange={setShowLembreteModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <BellRing className="h-5 w-5" />
+              {editingLembrete ? 'Editar Lembrete' : 'Novo Lembrete'}
+              {selectedAtendimento && (
+                <span className="text-sm font-normal text-muted-foreground">
+                  — {selectedAtendimento.nome}
+                </span>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Tipo de Lembrete</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLembreteTipo('interno')}
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm ${lembreteTipo === 'interno' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                >
+                  <Bell className="h-4 w-4" /> Interno
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLembreteTipo('whatsapp')}
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm ${lembreteTipo === 'whatsapp' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                >
+                  WhatsApp
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLembreteTipo('email')}
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm ${lembreteTipo === 'email' ? 'bg-amber-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                >
+                  Email
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Data</label>
+                <Input
+                  type="date"
+                  value={lembreteData}
+                  onChange={(e) => setLembreteData(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Hora</label>
+                <Input
+                  type="time"
+                  value={lembreteHora}
+                  onChange={(e) => setLembreteHora(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Mensagem</label>
+              <textarea
+                className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm"
+                placeholder="Digite a mensagem do lembrete..."
+                value={lembreteMensagem}
+                onChange={(e) => setLembreteMensagem(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLembreteModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveLembrete} disabled={isCreating}>
+              {isCreating ? 'Salvando...' : 'Salvar Lembrete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

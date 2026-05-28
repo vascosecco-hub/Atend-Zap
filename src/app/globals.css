@@ -26,10 +26,38 @@
     background-size: 56px 56px;
   }
   .text-glow {
-    text-shadow: 0 0 30px rgba(76, 214, 118, 0.5);
+    text-shadow: 0 0 30px rgba(46, 139, 87, 0.5);
   }
   .border-glow {
     box-shadow: var(--shadow-glow);
+  }
+  /* Card 3D effect - "saltar da tela" */
+  .card-3d {
+    background: #696969;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 #444, -1px -1px 0 #888;
+    border: 2px solid #555;
+  }
+  .card-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0 #444, -1px -1px 0 #888;
+  }
+  /* Botão com efeito saltar */
+  .btn-3d {
+    background: #2E8B57;
+    color: #FFFAF0;
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 #1a5f3a;
+    border: none;
+    transition: all 0.15s ease;
+  }
+  .btn-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 #1a5f3a;
+  }
+  .btn-3d:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0 #1a5f3a;
   }
 }
 
@@ -48,31 +76,31 @@
 :root,
 [data-theme="dark"] {
   --radius: 0.75rem;
-  --background: #000;
-  --foreground: #fff;
-  --card: #0a0a0a;
-  --card-foreground: #fff;
-  --popover: #0a0a0a;
-  --popover-foreground: #fff;
-  --primary: #40cc6d;
-  --primary-foreground: #000;
+  --background: #000000;
+  --foreground: #FFFAF0;
+  --card: #696969;
+  --card-foreground: #FFFAF0;
+  --popover: #696969;
+  --popover-foreground: #FFFAF0;
+  --primary: #2E8B57;
+  --primary-foreground: #FFFAF0;
   --secondary: #1a1a1a;
-  --secondary-foreground: #fff;
-  --muted: #1a1a1a;
-  --muted-foreground: #9e9e9e;
-  --accent: #40cc6d;
-  --accent-foreground: #000;
+  --secondary-foreground: #FFFAF0;
+  --muted: #696969;
+  --muted-foreground: #FFFAF0;
+  --accent: #2E8B57;
+  --accent-foreground: #000000;
   --destructive: #e62b34;
-  --destructive-foreground: #fff;
-  --border: #26262699;
-  --input: #1a1a1a;
-  --ring: #40cc6d;
-  --whatsapp: #40cc6d;
-  --whatsapp-glow: #45e77a;
-  --gradient-hero: radial-gradient(ellipse at top, rgba(64, 204, 109, 0.15), transparent 60%);
-  --gradient-card: linear-gradient(180deg, #0c0c0c, #050505);
-  --gradient-accent: linear-gradient(135deg, #40cc6d, #32b46b);
-  --shadow-glow: 0 0 40px rgba(64, 204, 109, 0.3), 0 0 80px rgba(64, 204, 109, 0.12);
+  --destructive-foreground: #FFFAF0;
+  --border: #555555;
+  --input: #A9A9A9;
+  --ring: #2E8B57;
+  --whatsapp: #2E8B57;
+  --whatsapp-glow: #3cb371;
+  --gradient-hero: radial-gradient(ellipse at top, rgba(46, 139, 87, 0.15), transparent 60%);
+  --gradient-card: linear-gradient(180deg, #696969, #555555);
+  --gradient-accent: linear-gradient(135deg, #2E8B57, #3cb371);
+  --shadow-glow: 0 0 40px rgba(46, 139, 87, 0.3), 0 0 80px rgba(46, 139, 87, 0.12);
   --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
   --font-sans: "Inter", system-ui, sans-serif;
   --font-display: "Space Grotesk", system-ui, sans-serif;

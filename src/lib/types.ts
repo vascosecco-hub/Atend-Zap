@@ -4,6 +4,8 @@ export type TipoAtendimento = 'entrega' | 'consulta' | 'retirada' | 'presencial'
 export type RegiaoEntrega = 'Zona Norte' | 'Zona Sul' | 'Zona Oeste' | 'Centro' | 'Baixada' | 'Grande RJ'
 export type StatusEntrega = 'agendado' | 'confirmado' | 'em_rota' | 'entregue' | 'cancelado'
 export type Perfil = 'admin' | 'usuario'
+export type TipoLembrete = 'whatsapp' | 'email' | 'interno'
+export type StatusLembrete = 'pendente' | 'enviado' | 'concluido' | 'cancelado'
 
 export interface Atendimento {
   id: string
@@ -60,4 +62,16 @@ export interface ConteudoAgente {
   texto_encerramento: string
   updated_at: string
   updated_by: string | null
+}
+
+export interface Lembrete {
+  id: string
+  atendimento_id: string
+  tipo_envio: TipoLembrete
+  mensagem: string
+  data_hora_agendada: string
+  status: StatusLembrete
+  enviado_em: string | null
+  criado_por: string | null
+  created_at: string
 }

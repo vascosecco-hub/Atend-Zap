@@ -127,32 +127,27 @@
     return (
       <div className="min-h-screen" style={{ backgroundColor: '#000', padding: '20px' }}>
         {/* Header Navigation */}
-        <header className="flex items-center justify-between mb-6 p-4 rounded-lg" style={{ backgroundColor: '#1a1a1a',
-   border: '3px solid #444' }}>
+        <header className="flex items-center justify-between mb-6 p-4 rounded-lg" style={{ backgroundColor: '#696969', border: '3px solid #444' }}>
           <div className="flex items-center gap-3">
-            <TrendingUp className="h-6 w-6 text-blue-400" />
-            <span className="text-xl font-bold text-white">AtendZap</span>
-            <span className="text-sm text-gray-400">/ Dashboard</span>
+            <TrendingUp className="h-6 w-6" style={{ color: '#2E8B57' }} />
+            <span className="text-xl font-bold" style={{ color: '#2E8B57' }}>AtendZap</span>
+            <span className="text-sm" style={{ color: '#A9A9A9' }}>/ Dashboard</span>
           </div>
           <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: 
-  '#333', color: '#fff', border: '2px solid #555' }}>
+            <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
               <Home className="h-4 w-4" /> Página Inicial
             </a>
-            <a href="/crm" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor:
-   '#333', color: '#fff', border: '2px solid #555' }}>
+            <a href="/crm" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
               <Users className="h-4 w-4" /> CRM
             </a>
-            <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ 
-  backgroundColor: '#2563EB', color: '#fff', border: '2px solid #1D4ED8' }}>
+            <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#2E8B57', color: '#FFFAF0', border: '2px solid #1a5f3a' }}>
               <TrendingUp className="h-4 w-4" /> Dashboard
             </a>
           </div>
         </header>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4 mb-6 p-4 rounded-lg" style={{ backgroundColor: '#1a1a1a',
-  border: '3px solid #444' }}>
+        <div className="flex flex-wrap items-center gap-4 mb-6 p-4 rounded-lg" style={{ backgroundColor: '#696969', border: '3px solid #444' }}>
           <div className="flex items-center gap-2">
             <label className="text-sm font-bold text-white">Nicho:</label>
             <select

@@ -69,11 +69,11 @@ export default function Index() {
       {/* Nav */}
       <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/40">
-            <MessageCircle className="h-5 w-5 text-primary" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: '#000', border: '2px solid #2E8B57' }}>
+            <MessageCircle className="h-5 w-5" style={{ color: '#2E8B57' }} />
           </div>
           <span className="font-display text-lg font-semibold tracking-tight">
-            Atend<span className="text-primary">Zap</span>
+            Atend<span style={{ color: '#2E8B57' }}>Zap</span>
           </span>
         </div>
         <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
@@ -130,11 +130,11 @@ export default function Index() {
             { icon: MapPin, label: "Por região", sub: "bairro & CEP" },
             { icon: ShieldCheck, label: "LGPD", sub: "consentimento" },
           ].map(({ icon: Icon, label, sub }) => (
-            <div key={label} className="flex items-center gap-3 rounded-xl border border-border/60 bg-card/30 p-4 backdrop-blur">
-              <Icon className="h-5 w-5 text-primary" />
+            <div key={label} className="card-3d flex items-center gap-3 p-4">
+              <Icon className="h-5 w-5" style={{ color: '#2E8B57' }} />
               <div>
-                <div className="text-sm font-semibold">{label}</div>
-                <div className="text-xs text-muted-foreground">{sub}</div>
+                <div className="text-sm font-semibold" style={{ color: '#FFFAF0' }}>{label}</div>
+                <div className="text-xs" style={{ color: '#A9A9A9' }}>{sub}</div>
               </div>
             </div>
           ))}
@@ -158,29 +158,24 @@ export default function Index() {
             <button
               key={name}
               onClick={() => setActiveAgent(agents.find(a => a.gptId === gptId) || null)}
-              className="group relative overflow-hidden rounded-2xl border border-border/60 bg-[var(--gradient-card)] p-6 text-left transition-all duration-500 hover:border-primary/50 hover:-translate-y-1"
-              style={{ boxShadow: "var(--shadow-card)" }}
+              className="group relative overflow-hidden rounded-2xl border border-border/60 p-6 text-left transition-all duration-500 hover:-translate-y-1"
+              style={{ background: '#696969', boxShadow: '4px 4px 0 #444, -1px -1px 0 #888' }}
             >
-              <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${accent}`} />
-              <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ backgroundColor: '#000', border: '2px solid #2E8B57' }}>
+                <Icon className="h-6 w-6" style={{ color: '#2E8B57' }} />
+              </div>
 
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/30 transition-all group-hover:bg-primary/20">
-                  <Icon className="h-6 w-6 text-primary" />
-                </div>
+              <div className="mt-6">
+                <div className="text-xs uppercase tracking-widest" style={{ color: '#A9A9A9' }}>{tag}</div>
+                <h3 className="mt-1 font-display text-xl font-semibold" style={{ color: '#FFFAF0' }}>{name}</h3>
+                <p className="mt-3 text-sm leading-relaxed" style={{ color: '#FFFAF0' }}>{desc}</p>
+              </div>
 
-                <div className="mt-6">
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">{tag}</div>
-                  <h3 className="mt-1 font-display text-xl font-semibold">{name}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-                </div>
-
-                <div className="mt-8 flex items-center justify-between border-t border-border/60 pt-4">
-                  <span className="text-xs text-muted-foreground">Iniciar conversa</span>
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary transition-all group-hover:bg-primary group-hover:text-primary-foreground">
-                    <ArrowUpRight className="h-4 w-4" />
-                  </span>
-                </div>
+              <div className="mt-8 flex items-center justify-between border-t border-border/60 pt-4">
+                <span className="text-xs" style={{ color: '#A9A9A9' }}>Iniciar conversa</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ backgroundColor: '#2E8B57', color: '#FFFAF0' }}>
+                  <ArrowUpRight className="h-4 w-4" />
+                </span>
               </div>
             </button>
           ))}

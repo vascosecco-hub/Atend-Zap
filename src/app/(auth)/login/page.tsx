@@ -34,25 +34,25 @@ export default function Login() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#000000' }}>
       {/* branding */}
       <div className="absolute top-6 left-6 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/40">
-          <MessageCircle className="h-5 w-5 text-primary" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: '#000', border: '2px solid #2E8B57' }}>
+          <MessageCircle className="h-5 w-5" style={{ color: '#2E8B57' }} />
         </div>
         <span className="font-display text-lg font-semibold tracking-tight">
-          Atend<span className="text-primary">Zap</span>
+          Atend<span style={{ color: '#2E8B57' }}>Zap</span>
         </span>
       </div>
 
       {/* login card */}
-      <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-[var(--gradient-card)] p-8" style={{ boxShadow: 'var(--shadow-card)' }}>
+      <div className="w-full max-w-sm rounded-2xl p-8" style={{ backgroundColor: '#696969', boxShadow: '4px 4px 0 #444, -1px -1px 0 #888' }}>
         <div className="text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/30">
-            <HardHat className="h-6 w-6 text-primary" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl" style={{ backgroundColor: '#000', border: '2px solid #2E8B57' }}>
+            <HardHat className="h-6 w-6" style={{ color: '#2E8B57' }} />
           </div>
-          <h1 className="mt-4 font-display text-2xl font-semibold">Acessar CRM</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Entre com suas credenciais</p>
+          <h1 className="mt-4 font-display text-2xl font-semibold" style={{ color: '#FFFAF0' }}>Acessar CRM</h1>
+          <p className="mt-2 text-sm" style={{ color: '#A9A9A9' }}>Entre com suas credenciais</p>
         </div>
 
         <Form {...form}>
@@ -62,9 +62,9 @@ export default function Login() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel style={{ color: '#FFFAF0' }}>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="seu@email.com" {...field} />
+                    <Input placeholder="seu@email.com" {...field} style={{ backgroundColor: '#A9A9A9', color: '#FFFAF0' }} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,9 +75,9 @@ export default function Login() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
+                  <FormLabel style={{ color: '#FFFAF0' }}>Senha</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
+                    <Input type="password" placeholder="••••••••" {...field} style={{ backgroundColor: '#A9A9A9', color: '#FFFAF0' }} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,7 +88,7 @@ export default function Login() {
                 {form.formState.errors.root.message}
               </div>
             )}
-            <Button type="submit" className="w-full" disabled={isLoggingIn}>
+            <Button type="submit" className="w-full btn-3d" disabled={isLoggingIn}>
               {isLoggingIn ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
