@@ -58,7 +58,7 @@
       }
     }, [isLoading, session, router])
 
-    const { data: atendimentos } = useQuery({
+    const { data: atendimentos, isLoading: isLoadingAtendimentos, error: atendimentosError } = useQuery({
       queryKey: ['dashboard-atendimentos', startDate, endDate, nichoFilter],
       queryFn: async () => {
         let query = supabase
@@ -71,9 +71,13 @@
           query = query.eq('nicho', nichoFilter)
         }
 
-        const { data } = await query
+        const { data, error } = await query
+        if (error) throw error
         return data ?? []
       },
+      enabled: !!session && !isLoading,
+      retry: false,
+      staleTime: 30000,
     })
 
     const barData = Object.entries(nicheLabels).map(([key, label]) => ({
