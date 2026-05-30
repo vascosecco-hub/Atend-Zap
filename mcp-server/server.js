@@ -259,16 +259,23 @@ function createMcpServer(sessionId) {
       // Preparar dados para insert
       // Se nome não foi coletado, tentar extrair do resumo
       let nomeCliente = session.cliente?.nome || "Cliente WhatsApp";
-      if (nomeCliente === "Cliente WhatsApp" && resumo_conversa) {
-        // Tentar extrair nome do padrão "Cliente X" ou "Cliente X Y Z"
-        const match1 = resumo_conversa.match(/Cliente\s+([A-Za-z]+(?:\s+[A-Za-z]+){1,3})\s+(?:solicitou|pagou|pediu|informou|confirmou)/i);
+      let emailCliente = session.cliente?.email || null;
+      if (resumo_conversa) {
+        // Tentar extrair nome do padrão "Cliente X Y Z solicitou" ou "X Y Z solicitou"
+        const match1 = resumo_conversa.match(/(?:Cliente\s+)?([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\s+(?:solicitou|pagou|pediu|informou|confirmou)/i);
         if (match1 && match1[1]) {
           nomeCliente = match1[1].trim();
+        }
+        // Tentar extrair email do resumo
+        const emailMatch = resumo_conversa.match(/[\w.-]+@[\w.-]+\.\w+/);
+        if (emailMatch && !emailCliente) {
+          emailCliente = emailMatch[0];
         }
       }
 
       const insertData = {
         nome: nomeCliente,
+        email: emailCliente,
         telefone: session.cliente?.telefone || null,
         nicho: nicho,
         resumo_conversa: resumo_conversa,
