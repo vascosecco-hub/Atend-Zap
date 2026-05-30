@@ -260,12 +260,10 @@ function createMcpServer(sessionId) {
       // Se nome não foi coletado, tentar extrair do resumo
       let nomeCliente = session.cliente?.nome || "Cliente WhatsApp";
       if (nomeCliente === "Cliente WhatsApp" && resumo_conversa) {
-        // Tentar extrair nome do padrão "Cliente X solicitou" ou "Cliente X pediu"
-        const match = resumo_conversa.match(/(?:Cliente\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)|([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:solicitou|pagou|pediu|informou))/i);
-        if (match && match[1]) {
-          nomeCliente = match[1].trim();
-        } else if (match && match[2]) {
-          nomeCliente = match[2].trim();
+        // Tentar extrair nome do padrão "Cliente X" ou "Cliente X Y Z"
+        const match1 = resumo_conversa.match(/Cliente\s+([A-Za-z]+(?:\s+[A-Za-z]+){1,3})\s+(?:solicitou|pagou|pediu|informou|confirmou)/i);
+        if (match1 && match1[1]) {
+          nomeCliente = match1[1].trim();
         }
       }
 
