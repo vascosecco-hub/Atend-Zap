@@ -278,13 +278,22 @@ function createMcpServer(sessionId) {
         }
       }
 
+      // Extrair produtos do resumo (caso não tenha sido coletado na sessão)
+      let produtosCliente = session.produtos?.itens || null;
+      if (!produtosCliente && resumo_conversa) {
+        const match = resumo_conversa.match(/(?:solicitou|pediu)\s+(.+?)(?:,\s*(?:com\s+)?(?:entrega|para\s+entrega)|\.?\s*(?:Pagamento|$))/i);
+        if (match) {
+          produtosCliente = match[1].trim();
+        }
+      }
+
       const insertData = {
         nome: nomeCliente,
         email: emailCliente,
         telefone: session.cliente?.telefone || null,
         nicho: nicho,
         resumo_conversa: resumo_conversa,
-        produtos_citados: session.produtos?.itens || null,
+        produtos_citados: produtosCliente,
         transferido_para: transferencia || null,
         status: "encerrado",
         // Endereço
