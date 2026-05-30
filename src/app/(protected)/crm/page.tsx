@@ -419,7 +419,7 @@ export default function CRMDashboard() {
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Nicho</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Status</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Data/Hora</TableHead>
-                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Endereço</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Agendamento / Endereço</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Produtos</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Resumo</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Lembretes</TableHead>
@@ -444,8 +444,17 @@ export default function CRMDashboard() {
                       {formatDate(at.data_agendamento)}
                       {at.hora_agendamento ? ` ${at.hora_agendamento}` : ''}
                     </TableCell>
-                    <TableCell className="text-xs max-w-[200px] truncate" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
-                      {at.endereco_entrega ? `${at.endereco_entrega}${at.numero_endereco ? `, ${at.numero_endereco}` : ''}` : '—'}
+                    <TableCell className="text-xs max-w-[200px]" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
+                      {formatDate(at.data_agendamento)}
+                      {at.hora_agendamento ? ` ${at.hora_agendamento}` : ''}
+                      {at.endereco_entrega ? (
+                        <>
+                          {at.data_agendamento ? ' - ' : ''}
+                          {`${at.endereco_entrega}${at.numero_endereco ? `, ${at.numero_endereco}` : ''}`}
+                          {at.complemento ? `, ${at.complemento}` : ''}
+                          {at.bairro_entrega ? `, ${at.bairro_entrega}` : ''}
+                        </>
+                      ) : ''}
                     </TableCell>
                     <TableCell className="text-xs max-w-[150px]" style={{ borderBottom: '1px solid #888' }}>
                       <span className="block break-words whitespace-normal" style={{ color: '#FFFAF0' }}>{at.produtos_citados ?? '—'}</span>
