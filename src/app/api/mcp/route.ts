@@ -251,6 +251,7 @@ export async function POST(request: NextRequest) {
         const insertData = {
           nome: dados.nome || 'Cliente WhatsApp',
           telefone: dados.telefone || null,
+          email: dados.email || null,
           nicho: nicho,
           resumo_conversa: resumo_conversa,
           produtos_citados: dados.produtos || null,

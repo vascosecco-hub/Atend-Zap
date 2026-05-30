@@ -415,10 +415,10 @@ export default function CRMDashboard() {
                 <TableRow style={{ backgroundColor: '#555', borderBottom: '2px solid #888' }}>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Nome</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Telefone</TableHead>
-                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>NichO</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Email</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Nicho</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Status</TableHead>
-                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Data</TableHead>
-                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Hora</TableHead>
+                  <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Data/Hora</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Endereço</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Produtos</TableHead>
                   <TableHead style={{ color: '#FFFAF0', borderBottom: '2px solid #888' }}>Resumo</TableHead>
@@ -433,14 +433,17 @@ export default function CRMDashboard() {
                   <TableRow key={at.id} style={{ borderBottom: '2px solid #888', backgroundColor: '#555' }}>
                     <TableCell className="font-medium" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.nome ?? '—'}</TableCell>
                     <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.telefone ?? '—'}</TableCell>
+                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.email ?? '—'}</TableCell>
                     <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{nichoLabel[at.nicho] ?? at.nicho ?? '—'}</TableCell>
                     <TableCell style={{ borderBottom: '1px solid #888' }}>
                       <span className={`text-sm font-medium ${statusColor[at.status ?? ''] ?? ''}`}>
                         {statusLabel[at.status ?? ''] ?? at.status ?? '—'}
                       </span>
                     </TableCell>
-                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{formatDate(at.data_agendamento)}</TableCell>
-                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>{at.hora_agendamento ?? '—'}</TableCell>
+                    <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
+                      {formatDate(at.data_agendamento)}
+                      {at.hora_agendamento ? ` ${at.hora_agendamento}` : ''}
+                    </TableCell>
                     <TableCell className="text-xs max-w-[200px] truncate" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
                       {at.endereco_entrega ? `${at.endereco_entrega}${at.numero_endereco ? `, ${at.numero_endereco}` : ''}` : '—'}
                     </TableCell>

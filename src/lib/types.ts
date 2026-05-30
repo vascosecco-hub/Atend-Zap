@@ -12,6 +12,7 @@ export interface Atendimento {
   data_hora: string
   nome: string
   telefone: string
+  email: string | null
   nicho: Nicho
   resumo_conversa: string | null
   produtos_citados: string | null
