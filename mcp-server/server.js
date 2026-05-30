@@ -281,7 +281,7 @@ function createMcpServer(sessionId) {
       // Extrair produtos do resumo (caso não tenha sido coletado na sessão)
       let produtosCliente = session.produtos?.itens || null;
       if (!produtosCliente && resumo_conversa) {
-        const match = resumo_conversa.match(/(?:solicitou|pediu)\s+(.+?)(?:,\s*(?:com\s+)?(?:entrega|para\s+entrega)|\.?\s*(?:Pagamento|$))/i);
+        const match = resumo_conversa.match(/(?:solicitou|pediu)\s+(.+?)\s*(?:,|para\s+entrega|\.\s*Pagamento)/i);
         if (match) {
           produtosCliente = match[1].trim();
         }
