@@ -244,6 +244,15 @@ export default function CRMDashboard() {
     }
   }
 
+  function formatDateTime(dateStr: string | null) {
+    if (!dateStr) return '—'
+    try {
+      return format(parseISO(dateStr), "dd/MM/yyyy HH:mm", { locale: ptBR })
+    } catch {
+      return dateStr
+    }
+  }
+
   const statusLabel: Record<StatusAtendimento | 'agendado' | 'entregue', string> = {
     pendente: 'Pendente',
     encerrado: 'Encerrado',
@@ -441,8 +450,7 @@ export default function CRMDashboard() {
                       </span>
                     </TableCell>
                     <TableCell style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
-                      {formatDate(at.data_agendamento)}
-                      {at.hora_agendamento ? ` ${at.hora_agendamento}` : ''}
+                      {formatDateTime(at.data_hora)}
                     </TableCell>
                     <TableCell className="text-xs max-w-[200px]" style={{ color: '#FFFAF0', borderBottom: '1px solid #888' }}>
                       {formatDate(at.data_agendamento)}
