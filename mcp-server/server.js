@@ -257,17 +257,18 @@ function createMcpServer(sessionId) {
       ].filter(Boolean).join(", ");
 
       // Preparar dados para insert
-      // Se nome não foi coletado, tentar extrair do resumo
       let nomeCliente = session.cliente?.nome || "Cliente WhatsApp";
       let emailCliente = session.cliente?.email || null;
-      if (resumo_conversa && nomeCliente === "Cliente WhatsApp") {
-        // Primeiro tenta "Cliente Nome"
+
+      // Sempre tentar extrair nome e email do resumo (caso GPT Maker não tenha passado session_id)
+      if (resumo_conversa) {
+        // Primeiro tenta "Cliente Nome" (pode vir "Cliente Zeca", "Cliente Carlos", etc)
         let match = resumo_conversa.match(/Cliente\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/);
         if (match) {
           nomeCliente = match[1];
         } else {
-          // Tenta só "Nome" no início do resumo
-          match = resumo_conversa.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/);
+          // Tenta só "Nome" no início do resumo (quando não tem "Cliente" antes)
+          match = resumo_conversa.match(/^([A-Z][a-z]+)/);
           if (match) nomeCliente = match[1];
         }
         // Tentar extrair email do resumo
