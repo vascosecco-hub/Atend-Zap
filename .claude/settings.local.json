@@ -46,7 +46,13 @@
       "mcp__claude_ai_Supabase__execute_sql",
       "mcp__claude_ai_Supabase__apply_migration",
       "Bash(head -31 \"C:\\\\Users\\\\Home\\\\atend-zap\\\\src\\\\app\\\\\\(protected\\)\\\\crm\\\\page.tsx\")",
-      "Bash(src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)"
+      "Bash(src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
+      "Bash(tail:*)",
+      "Bash(wc -l src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
+      "Bash(tail -10 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
+      "Bash(head -596 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
+      "Bash(mv /tmp/crm_fixed.tsx src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
+      "Bash(tail -3 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)"
     ]
   }
 }
