@@ -64,8 +64,13 @@
         let query = supabase
           .from('atendimentos')
           .select('*')
-          .gte('created_at', startDate || format(subDays(new Date(), 30), 'yyyy-MM-dd'))
-          .lte('created_at', endDate ? endDate + 'T23:59:59' : format(new Date(), 'yyyy-MM-dd'))
+
+        if (startDate) {
+          query = query.gte('created_at', startDate)
+        }
+        if (endDate) {
+          query = query.lte('created_at', endDate + 'T23:59:59')
+        }
 
         if (nichoFilter !== 'todos') {
           query = query.eq('nicho', nichoFilter)
