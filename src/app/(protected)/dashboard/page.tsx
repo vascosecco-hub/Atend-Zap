@@ -10,7 +10,7 @@
   import { ptBR } from 'date-fns/locale'
   import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
   import { TrendingUp, Package, MessageCircle, Calendar, Home, Users, Menu } from 'lucide-react'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
+  import { Sheet, SheetContent } from '@/components/ui/sheet'
   import {
     Bar,
     BarChart as RechartsBar,
@@ -51,9 +51,13 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
     const [nichoFilter, setNichoFilter] = useState<string>('todos')
     const [isMobile, setIsMobile] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
+    const [screenWidth, setScreenWidth] = useState(1280)
 
     useEffect(() => {
-      const checkMobile = () => setIsMobile(window.innerWidth < 768)
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768)
+        setScreenWidth(window.innerWidth)
+      }
       checkMobile()
       window.addEventListener('resize', checkMobile)
       return () => window.removeEventListener('resize', checkMobile)
@@ -136,11 +140,13 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
     const totalAtendimentos = atendimentos?.length ?? 0
     const totalProdutos = Object.values(produtoCounts).reduce((a, b) => a + b, 0)
 
-    // High relief card style
+    // High relief card style - lighter on mobile
     const cardStyle = {
       backgroundColor: '#D4D4D4',
-      border: '3px solid #888',
-      boxShadow: '4px 4px 0 #555, -1px -1px 0 #fff',
+      border: screenWidth < 768 ? '2px solid #888' : '3px solid #888',
+      boxShadow: screenWidth < 768
+        ? '2px 2px 0 #777'
+        : '4px 4px 0 #555, -1px -1px 0 #fff',
     }
 
     return (
@@ -167,28 +173,13 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
                 <SheetContent side="left" className="w-[250px] bg-[#696969] border-r border-[#444]">
                   <div className="flex flex-col gap-3 mt-8">
                     <span className="text-lg font-bold px-3" style={{ color: '#2E8B57' }}>Menu</span>
-                    <a
-                      href="/"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded font-medium"
-                      style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}
-                    >
+                    <a href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 p-3 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
                       <Home className="h-5 w-5" /> Página Inicial
                     </a>
-                    <a
-                      href="/crm"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded font-medium"
-                      style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}
-                    >
+                    <a href="/crm" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 p-3 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
                       <Users className="h-5 w-5" /> CRM
                     </a>
-                    <a
-                      href="/dashboard"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded font-medium"
-                      style={{ backgroundColor: '#2E8B57', color: '#FFFAF0', border: '2px solid #1a5f3a' }}
-                    >
+                    <a href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 p-3 rounded font-medium" style={{ backgroundColor: '#2E8B57', color: '#FFFAF0', border: '2px solid #1a5f3a' }}>
                       <TrendingUp className="h-5 w-5" /> Dashboard
                     </a>
                   </div>
@@ -228,7 +219,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
             </select>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
             <div className="flex items-center gap-2">
               <label className="text-sm font-bold text-white shrink-0">De:</label>
               <input
@@ -253,41 +244,41 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
         </div>
 
         {/* Stats cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="p-4 rounded-lg" style={{ ...cardStyle }}>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <div className="p-3 sm:p-4 rounded-lg" style={{ ...cardStyle }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-gray-700">Total Atendimentos</span>
-              <MessageCircle className="h-5 w-5 text-gray-600" />
+              <span className="text-xs sm:text-sm font-bold text-gray-700">Total Atendimentos</span>
+              <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
             </div>
-            <div className="text-3xl font-bold text-black">{totalAtendimentos}</div>
-            <p className="text-xs text-gray-500 mt-1">Período selecionado</p>
+            <div className="text-2xl sm:text-3xl font-bold text-black">{totalAtendimentos}</div>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Período selecionado</p>
           </div>
 
-          <div className="p-4 rounded-lg" style={{ ...cardStyle }}>
+          <div className="p-3 sm:p-4 rounded-lg" style={{ ...cardStyle }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-gray-700">Produtos Citados</span>
-              <Package className="h-5 w-5 text-gray-600" />
+              <span className="text-xs sm:text-sm font-bold text-gray-700">Produtos Citados</span>
+              <Package className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
             </div>
-            <div className="text-3xl font-bold text-black">{totalProdutos}</div>
-            <p className="text-xs text-gray-500 mt-1">itens mencionados</p>
+            <div className="text-2xl sm:text-3xl font-bold text-black">{totalProdutos}</div>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">itens mencionados</p>
           </div>
 
-          <div className="p-4 rounded-lg" style={{ ...cardStyle }}>
+          <div className="p-3 sm:p-4 rounded-lg" style={{ ...cardStyle }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-gray-700">Nichos Ativos</span>
-              <TrendingUp className="h-5 w-5 text-gray-600" />
+              <span className="text-xs sm:text-sm font-bold text-gray-700">Nichos Ativos</span>
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
             </div>
-            <div className="text-3xl font-bold text-black">{barData.filter((b) => b.value > 0).length}</div>
-            <p className="text-xs text-gray-500 mt-1">com atendimentos</p>
+            <div className="text-2xl sm:text-3xl font-bold text-black">{barData.filter((b) => b.value > 0).length}</div>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">com atendimentos</p>
           </div>
 
-          <div className="p-4 rounded-lg" style={{ ...cardStyle }}>
+          <div className="p-3 sm:p-4 rounded-lg" style={{ ...cardStyle }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-gray-700">Data Atual</span>
-              <Calendar className="h-5 w-5 text-gray-600" />
+              <span className="text-xs sm:text-sm font-bold text-gray-700">Data Atual</span>
+              <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
             </div>
-            <div className="text-3xl font-bold text-black">{format(new Date(), 'dd/MM')}</div>
-            <p className="text-xs text-gray-500 mt-1">{format(new Date(), 'yyyy')}</p>
+            <div className="text-2xl sm:text-3xl font-bold text-black">{format(new Date(), 'dd/MM')}</div>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">{format(new Date(), 'yyyy')}</p>
           </div>
         </div>
 
@@ -301,11 +292,11 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
               {barData.every((b) => b.value === 0) ? (
                 <div className="flex items-center justify-center h-[200px] text-gray-500">Sem dados no período</div>
               ) : (
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={screenWidth < 640 ? 260 : 220}>
                   <RechartsBar data={barData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#999" />
-                    <XAxis dataKey="name" tick={{ fill: '#333', fontSize: 12 }} />
-                    <YAxis allowDecimals={false} tick={{ fill: '#333', fontSize: 12 }} />
+                    <XAxis dataKey="name" tick={{ fill: '#333', fontSize: screenWidth < 640 ? 10 : 12 }} />
+                    <YAxis allowDecimals={false} tick={{ fill: '#333', fontSize: screenWidth < 640 ? 10 : 12 }} />
                     <Tooltip contentStyle={{ backgroundColor: '#fff', border: '2px solid #888' }} />
                     <Bar dataKey="value" radius={[6, 6, 0, 0]} />
                   </RechartsBar>
@@ -322,7 +313,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
               {pieData.length === 0 ? (
                 <div className="flex items-center justify-center h-[200px] text-gray-500">Sem dados no período</div>
               ) : (
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={screenWidth < 640 ? 260 : 220}>
                   <RechartsPie>
                     <Pie
                       data={pieData}
@@ -330,8 +321,8 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
+                      innerRadius={screenWidth < 640 ? 35 : 50}
+                      outerRadius={screenWidth < 640 ? 65 : 80}
                       paddingAngle={2}
                     >
                       {pieData.map((entry, index) => (
@@ -339,7 +330,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: '#fff', border: '2px solid #888' }} />
-                    <Legend wrapperStyle={{ color: '#333' }} />
+                    <Legend wrapperStyle={{ color: '#333', fontSize: screenWidth < 640 ? 10 : 12 }} />
                   </RechartsPie>
                 </ResponsiveContainer>
               )}
@@ -357,14 +348,13 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
             {lineData.length === 0 ? (
               <div className="flex items-center justify-center h-[200px] text-gray-500">Sem dados no período</div>
             ) : (
-              <ResponsiveContainer width="100%" height={220}>
+              <ResponsiveContainer width="100%" height={screenWidth < 640 ? 260 : 220}>
                 <RechartsLine data={lineData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#999" />
-                  <XAxis dataKey="name" tick={{ fill: '#333', fontSize: 12 }} />
-                  <YAxis allowDecimals={false} tick={{ fill: '#333', fontSize: 12 }} />
+                  <XAxis dataKey="name" tick={{ fill: '#333', fontSize: screenWidth < 640 ? 10 : 12 }} />
+                  <YAxis allowDecimals={false} tick={{ fill: '#333', fontSize: screenWidth < 640 ? 10 : 12 }} />
                   <Tooltip contentStyle={{ backgroundColor: '#fff', border: '2px solid #888' }} />
-                  <Line type="monotone" dataKey="value" stroke="#38BDF8" strokeWidth={2} dot={{ fill: '#38BDF8', r: 4 
-  }} />
+                  <Line type="monotone" dataKey="value" stroke="#38BDF8" strokeWidth={2} dot={{ fill: '#38BDF8', r: 4 }} />
                 </RechartsLine>
               </ResponsiveContainer>
             )}
