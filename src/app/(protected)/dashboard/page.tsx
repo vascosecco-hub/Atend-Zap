@@ -9,7 +9,8 @@
   import { format, subDays, parseISO } from 'date-fns'
   import { ptBR } from 'date-fns/locale'
   import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-  import { TrendingUp, Package, MessageCircle, Calendar, Home, Users } from 'lucide-react'
+  import { TrendingUp, Package, MessageCircle, Calendar, Home, Users, Menu } from 'lucide-react'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
   import {
     Bar,
     BarChart as RechartsBar,
@@ -48,6 +49,15 @@
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [nichoFilter, setNichoFilter] = useState<string>('todos')
+    const [isMobile, setIsMobile] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
+
+    useEffect(() => {
+      const checkMobile = () => setIsMobile(window.innerWidth < 768)
+      checkMobile()
+      window.addEventListener('resize', checkMobile)
+      return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
     useEffect(() => {
       if (isLoading) return
@@ -136,33 +146,78 @@
     return (
       <div className="min-h-screen" style={{ backgroundColor: '#000', padding: '20px' }}>
         {/* Header Navigation */}
-        <header className="flex items-center justify-between mb-6 p-4 rounded-lg" style={{ backgroundColor: '#696969', border: '3px solid #444' }}>
-          <div className="flex items-center gap-3">
-            <TrendingUp className="h-6 w-6" style={{ color: '#2E8B57' }} />
-            <span className="text-xl font-bold" style={{ color: '#2E8B57' }}>AtendZap</span>
-            <span className="text-sm" style={{ color: '#A9A9A9' }}>/ Dashboard</span>
+        <header className="flex items-center justify-between mb-6 p-3 sm:p-4 rounded-lg" style={{ backgroundColor: '#696969', border: '3px solid #444' }}>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: '#2E8B57' }} />
+            <span className="text-lg sm:text-xl font-bold" style={{ color: '#2E8B57' }}>AtendZap</span>
+            <span className="hidden sm:inline text-sm" style={{ color: '#A9A9A9' }}>/ Dashboard</span>
           </div>
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
-              <Home className="h-4 w-4" /> Página Inicial
-            </a>
-            <a href="/crm" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
-              <Users className="h-4 w-4" /> CRM
-            </a>
-            <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#2E8B57', color: '#FFFAF0', border: '2px solid #1a5f3a' }}>
-              <TrendingUp className="h-4 w-4" /> Dashboard
-            </a>
-          </div>
+
+          {isMobile ? (
+            <>
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="flex items-center gap-2 p-2 rounded font-medium"
+                style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}
+                aria-label="Abrir menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+                <SheetContent side="left" className="w-[250px] bg-[#696969] border-r border-[#444]">
+                  <div className="flex flex-col gap-3 mt-8">
+                    <span className="text-lg font-bold px-3" style={{ color: '#2E8B57' }}>Menu</span>
+                    <a
+                      href="/"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded font-medium"
+                      style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}
+                    >
+                      <Home className="h-5 w-5" /> Página Inicial
+                    </a>
+                    <a
+                      href="/crm"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded font-medium"
+                      style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}
+                    >
+                      <Users className="h-5 w-5" /> CRM
+                    </a>
+                    <a
+                      href="/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded font-medium"
+                      style={{ backgroundColor: '#2E8B57', color: '#FFFAF0', border: '2px solid #1a5f3a' }}
+                    >
+                      <TrendingUp className="h-5 w-5" /> Dashboard
+                    </a>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </>
+          ) : (
+            <div className="flex items-center gap-3">
+              <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
+                <Home className="h-4 w-4" /> Página Inicial
+              </a>
+              <a href="/crm" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
+                <Users className="h-4 w-4" /> CRM
+              </a>
+              <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#2E8B57', color: '#FFFAF0', border: '2px solid #1a5f3a' }}>
+                <TrendingUp className="h-4 w-4" /> Dashboard
+              </a>
+            </div>
+          )}
         </header>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4 mb-6 p-4 rounded-lg" style={{ backgroundColor: '#696969', border: '3px solid #444' }}>
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 mb-6 p-3 md:p-4 rounded-lg" style={{ backgroundColor: '#696969', border: '3px solid #444' }}>
           <div className="flex items-center gap-2">
-            <label className="text-sm font-bold text-white">Nicho:</label>
+            <label className="text-sm font-bold text-white shrink-0">Nicho:</label>
             <select
               value={nichoFilter}
               onChange={(e) => setNichoFilter(e.target.value)}
-              className="px-4 py-2 rounded font-medium"
+              className="flex-1 md:flex-none px-3 py-2 rounded font-medium text-sm"
               style={{ backgroundColor: '#D4D4D4', color: '#000', border: '2px solid #888' }}
             >
               <option value="todos">Todos</option>
@@ -173,23 +228,27 @@
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-bold text-white">De:</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-4 py-2 rounded font-medium"
-              style={{ backgroundColor: '#D4D4D4', color: '#000', border: '2px solid #888' }}
-            />
-            <label className="text-sm font-bold text-white">Até:</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-4 py-2 rounded font-medium"
-              style={{ backgroundColor: '#D4D4D4', color: '#000', border: '2px solid #888' }}
-            />
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-bold text-white shrink-0">De:</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="flex-1 sm:flex-none px-3 py-2 rounded font-medium text-sm"
+                style={{ backgroundColor: '#D4D4D4', color: '#000', border: '2px solid #888' }}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-bold text-white shrink-0">Até:</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="flex-1 sm:flex-none px-3 py-2 rounded font-medium text-sm"
+                style={{ backgroundColor: '#D4D4D4', color: '#000', border: '2px solid #888' }}
+              />
+            </div>
           </div>
         </div>
 
