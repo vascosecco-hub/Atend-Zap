@@ -105,7 +105,7 @@ export default async function AgentPage({ params }: Props) {
         <iframe
           src={agent.iframeSrc}
           width="100%"
-          style={{ height: '70%', border: 'none' }}
+          style={{ height: '50vh', border: 'none' }}
           allow="microphone;"
           frameBorder="0"
         />
