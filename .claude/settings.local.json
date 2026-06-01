@@ -52,7 +52,17 @@
       "Bash(tail -10 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
       "Bash(head -596 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
       "Bash(mv /tmp/crm_fixed.tsx src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
-      "Bash(tail -3 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)"
+      "Bash(tail -3 src/app/\\\\\\(protected\\\\\\)/crm/page.tsx)",
+      "Bash(ipconfig)",
+      "Bash(ping -4 -n 1 hostname)",
+      "Bash(printf \"192.168.1.\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //F //PID 13580)",
+      "Bash(wc:*)",
+      "Bash(git checkout:*)",
+      "Bash(head:*)"
     ]
   }
 }
