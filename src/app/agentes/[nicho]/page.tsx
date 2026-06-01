@@ -112,7 +112,13 @@ export default async function AgentPage({ params }: Props) {
             <div className={styles.loadingProgress} />
           </div>
         </div>
-        <GptWidget niche={nicho} widgetUrl={agent.widgetUrl} />
+        <iframe
+          src={agent.widgetUrl.replace('/float.js', '/iframe')}
+          style={{ width: '100%', height: '100%', border: 'none' }}
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+          allow="camera; microphone; autoplay; fullscreen"
+          frameBorder="0"
+        />
       </div>
     </main>
   )
