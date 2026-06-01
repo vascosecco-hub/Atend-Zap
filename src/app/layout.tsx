@@ -2,6 +2,13 @@ import { Poppins, Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/Providers'
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['800'],

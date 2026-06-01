@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface Props {
   widgetUrl: string
@@ -8,15 +8,25 @@ interface Props {
 }
 
 export default function GptWidget({ widgetUrl, niche }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
+    if (!containerRef.current) return
+
+    // Clear any previous widget
+    containerRef.current.innerHTML = ''
+
     const script = document.createElement('script')
     script.src = widgetUrl
     script.async = true
-    document.body.appendChild(script)
+    script.id = 'gpt-widget-script'
+    containerRef.current.appendChild(script)
+
     return () => {
-      document.body.removeChild(script)
+      const existing = document.getElementById('gpt-widget-script')
+      if (existing) existing.remove()
     }
   }, [widgetUrl, niche])
 
-  return null
+  return <div ref={containerRef} className="gpt-widget-container" style={{ width: '100%', height: '100%' }} />
 }
