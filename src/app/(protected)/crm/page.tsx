@@ -28,7 +28,8 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { MessageCircle, Clock, CheckCircle, Package, Search, Filter, Download, TrendingUp, Home, Users, Bell, BellRing } from 'lucide-react'
+import { MessageCircle, Clock, CheckCircle, Package, Search, Filter, Download, TrendingUp, Home, Users, Bell, BellRing, Menu } from 'lucide-react'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { toast } from 'sonner'
 
 const supabase = createSupabaseClient()
@@ -49,6 +50,8 @@ export default function CRMDashboard() {
   const router = useRouter()
   const { session, user, isLoading } = useAuth()
   const [filters, setFilters] = useState<Filters>({})
+  const [isMobile, setIsMobile] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [selectedAtendimento, setSelectedAtendimento] = useState<Atendimento | null>(null)
   const [showLembreteModal, setShowLembreteModal] = useState(false)
   const [editingLembrete, setEditingLembrete] = useState<Lembrete | null>(null)
@@ -59,6 +62,14 @@ export default function CRMDashboard() {
 
   const { lembretes, createLembrete, updateStatus, isCreating } = useLembretes(selectedAtendimento?.id)
   const { checkAlarms } = useAlarmCheck(session ?? null)
+
+  // Detectar mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Verificar alarms a cada 10 segundos
   useEffect(() => {
@@ -285,17 +296,46 @@ export default function CRMDashboard() {
           <span className="text-xl font-bold text-white">AtendZap</span>
           <span className="text-sm text-gray-400">/ CRM</span>
         </div>
-        <div className="flex items-center gap-3">
-          <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#333', color: '#fff', border: '2px solid #555' }}>
-            <Home className="h-4 w-4" /> Página Inicial
-          </a>
-          <span className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#2563EB', color: '#fff', border: '2px solid #1D4ED8' }}>
-            <Users className="h-4 w-4" /> CRM
-          </span>
-          <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#333', color: '#fff', border: '2px solid #555' }}>
-            <TrendingUp className="h-4 w-4" /> Dashboard
-          </a>
-        </div>
+        {isMobile ? (
+          <>
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex items-center gap-2 p-2 rounded font-medium"
+              style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}
+              aria-label="Abrir menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+              <SheetContent side="left" className="w-[250px] bg-[#696969] border-r border-[#444]">
+                <div className="flex flex-col gap-3 mt-8">
+                  <span className="text-lg font-bold px-3" style={{ color: '#2E8B57' }}>Menu</span>
+                  <a href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 p-3 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
+                    <Home className="h-5 w-5" /> Página Inicial
+                  </a>
+                  <a href="/crm" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 p-3 rounded font-medium" style={{ backgroundColor: '#2563EB', color: '#FFFAF0', border: '2px solid #1D4ED8' }}>
+                    <Users className="h-5 w-5" /> CRM
+                  </a>
+                  <a href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 p-3 rounded font-medium" style={{ backgroundColor: '#555', color: '#FFFAF0', border: '2px solid #777' }}>
+                    <TrendingUp className="h-5 w-5" /> Dashboard
+                  </a>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </>
+        ) : (
+          <div className="flex items-center gap-3">
+            <a href="/" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#333', color: '#fff', border: '2px solid #555' }}>
+              <Home className="h-4 w-4" /> Página Inicial
+            </a>
+            <span className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#2563EB', color: '#fff', border: '2px solid #1D4ED8' }}>
+              <Users className="h-4 w-4" /> CRM
+            </span>
+            <a href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded font-medium" style={{ backgroundColor: '#333', color: '#fff', border: '2px solid #555' }}>
+              <TrendingUp className="h-4 w-4" /> Dashboard
+            </a>
+          </div>
+        )}
       </header>
 
       <main className="px-6 py-6 space-y-6">
