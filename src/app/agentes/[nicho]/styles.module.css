@@ -71,5 +71,5 @@
   width: 420px;
   max-width: none;
   height: 100%;
-  border: none;
+  border: 10px solid red !important;
 }
