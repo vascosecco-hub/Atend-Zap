@@ -61,14 +61,15 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  width: 100vw;
+  width: 100%;
   max-width: 100vw;
-  overflow-x: scroll;
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .widgetContainer iframe {
-  width: 100vw;
-  display: block;
+  width: 420px;
+  max-width: none;
+  height: 100%;
   border: none;
 }
