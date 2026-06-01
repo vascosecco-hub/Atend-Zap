@@ -67,8 +67,8 @@
 }
 
 .widgetContainer iframe {
-  width: 100%;
-  max-width: 100%;
+  width: 1px;
+  min-width: 100%;
   display: block;
   border: none;
 }
