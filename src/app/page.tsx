@@ -265,7 +265,7 @@ export default function Index() {
 
       {/* GPT Maker Chatbot Dialog */}
       <Dialog open={!!activeAgent} onOpenChange={(open) => !open && setActiveAgent(null)}>
-        <DialogContent className="max-w-2xl w-[700px] h-[640px] p-0 gap-0 overflow-hidden flex flex-col">
+        <DialogContent className="w-[95vw] max-w-[95vw] h-[90vh] sm:w-[700px] sm:max-w-2xl sm:h-[640px] p-0 gap-0 overflow-hidden flex flex-col">
           <DialogHeader className="flex-shrink-0 flex w-full items-center justify-between border-b border-border/60 bg-background/95 px-4 py-3 backdrop-blur shrink-0">
             <DialogTitle className="flex items-center gap-2 text-sm font-medium">
               {activeAgent && (
