@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
   }
 
   // 3. Create Supabase admin client (service role key bypasses RLS)
+  console.log('[GPT Maker Webhook] Body recebido:', JSON.stringify(body, null, 2))
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -51,9 +52,10 @@ export async function POST(request: NextRequest) {
 
   // If nome is a placeholder or empty, try to extract from resumo
   if (!nomeFinal || nomeFinal === 'Cliente WhatsApp') {
-    const nameMatch = resumo?.match(/^([A-Za-zÀ-ÿ]+)\s+solicitou/i)
-      || resumo?.match(/^([A-Za-zÀ-ÿ]+)\s+pediu/i)
-      || resumo?.match(/^([A-Za-zÀ-ÿ]+)\s+quistou/i)
+    const nameMatch = resumo?.match(/Cliente\s+([A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*)\s+solicitou/i)
+      || resumo?.match(/Cliente\s+([A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*)\s+pediu/i)
+      || resumo?.match(/^([A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*)\s+solicitou/i)
+      || resumo?.match(/^([A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*)\s+pediu/i)
       || resumo?.match(/Cliente:\s*([A-Za-zÀ-ÿ\s]+?)(?:,|$)/i)
       || resumo?.match(/cliente\s*(?:é|se llama)?\s*([A-Za-zÀ-ÿ\s]+?)(?:\s*,|\s*telefone|\s*\d|$)/i)
       || resumo?.match(/nome[:\s]+([A-Za-zÀ-ÿ\s]+?)(?:\s*,|\s*telefone|\s*\d|$)/i)
