@@ -51,7 +51,10 @@ export async function POST(request: NextRequest) {
 
   // If nome is a placeholder or empty, try to extract from resumo
   if (!nomeFinal || nomeFinal === 'Cliente WhatsApp') {
-    const nameMatch = resumo?.match(/Cliente:\s*([A-Za-zÀ-ÿ\s]+?)(?:,|$)/i)
+    const nameMatch = resumo?.match(/^([A-Za-zÀ-ÿ]+)\s+solicitou/i)
+      || resumo?.match(/^([A-Za-zÀ-ÿ]+)\s+pediu/i)
+      || resumo?.match(/^([A-Za-zÀ-ÿ]+)\s+quistou/i)
+      || resumo?.match(/Cliente:\s*([A-Za-zÀ-ÿ\s]+?)(?:,|$)/i)
       || resumo?.match(/cliente\s*(?:é|se llama)?\s*([A-Za-zÀ-ÿ\s]+?)(?:\s*,|\s*telefone|\s*\d|$)/i)
       || resumo?.match(/nome[:\s]+([A-Za-zÀ-ÿ\s]+?)(?:\s*,|\s*telefone|\s*\d|$)/i)
     if (nameMatch) {
