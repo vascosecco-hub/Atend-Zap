@@ -44,15 +44,62 @@ export async function POST(request: NextRequest) {
     observacao_entrega,
   } = body
 
+  // 4.5: Extract real name, phone, and products from resumo if placeholders are sent
+  let nomeFinal = nome
+  let telefoneFinal = telefone
+  let produtosFinal = produtos
+
+  // If nome is a placeholder or empty, try to extract from resumo
+  if (!nomeFinal || nomeFinal === 'Cliente WhatsApp') {
+    const nameMatch = resumo?.match(/Cliente:\s*([A-Za-zÀ-ÿ\s]+?)(?:,|$)/i)
+      || resumo?.match(/cliente\s*(?:é|se llama)?\s*([A-Za-zÀ-ÿ\s]+?)(?:\s*,|\s*telefone|\s*\d|$)/i)
+      || resumo?.match(/nome[:\s]+([A-Za-zÀ-ÿ\s]+?)(?:\s*,|\s*telefone|\s*\d|$)/i)
+    if (nameMatch) {
+      nomeFinal = nameMatch[1].trim()
+    }
+  }
+
+  // If telefone is empty/placeholder, try to extract from resumo
+  if (!telefoneFinal) {
+    const phoneMatch = resumo?.match(/telefone[:\s]*(\d{8,11})/)
+      || resumo?.match(/(\d{5}-\d{4})/)
+      || resumo?.match(/(\d{8,11})/)
+    if (phoneMatch) {
+      telefoneFinal = phoneMatch[1].replace(/\D/g, '')
+    }
+  }
+
+  // If produtos is empty, try to extract from resumo or use the produtos field
+  if (!produtosFinal) {
+    // Try to find product mentions in resumo (common patterns)
+    const productPatterns = [
+      /(?:produto[s]?[:\s]*|solicitou[:\s]*|pediu[:\s]*|quer\s+(?:um|uma)?:?)(.+?)(?:\s*(?:para|entrega|endereço|cliente)|$)/gi,
+      /(?:Vitaminas?|Filés?|Bebidas?|Sucos?|Sanduíches?|Hambúrgueres?|Pizzas?|Combos?|Pratos?|Itens?)[A-Za-zÀ-ÿ\s,]+/gi,
+    ]
+    const foundProducts: string[] = []
+    for (const pattern of productPatterns) {
+      let match
+      while ((match = pattern.exec(resumo || '')) !== null) {
+        const product = match[1] || match[0]
+        if (product.trim() && product.trim().length > 2) {
+          foundProducts.push(product.trim())
+        }
+      }
+    }
+    if (foundProducts.length > 0) {
+      produtosFinal = foundProducts.join(', ')
+    }
+  }
+
   // 5. Insert into atendimentos table
     const { data: atendimento, error: atendimentoError } = await supabase
       .from('atendimentos')
       .insert({
-        nome,
-        telefone,
+        nome: nomeFinal,
+        telefone: telefoneFinal || null,
         nicho: 'construcao',
         resumo_conversa: resumo || null,
-        produtos_citados: produtos || null,
+        produtos_citados: produtosFinal || null,
         transferido_para,
         data_agendamento,
         hora_agendamento,
