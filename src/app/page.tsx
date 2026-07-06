@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -30,7 +30,7 @@ const agents = [
     gptId: "3E85F2A3DA4031A6D17E8A7F6D386327",
   },
   {
-    name: "Produtos Médicos",
+    name: "Agendamento Sal\u00e3o e Cl\u00ednica",
     tag: "Clínicas & Distribuidores",
     desc: "Pré-triagem, agendamento de consulta e consentimento LGPD.",
     icon: Stethoscope,
@@ -38,7 +38,7 @@ const agents = [
     gptId: "3E7AED03B65722FAB7D54E3016F89FC4",
   },
   {
-    name: "Pet Shop / Vet",
+    name: "Plantas",
     tag: "Animais & Veterinária",
     desc: "Banho, tosa e consulta veterinária com lembretes automáticos.",
     icon: PawPrint,
