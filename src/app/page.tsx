@@ -30,7 +30,7 @@ const agents = [
     gptId: "3E85F2A3DA4031A6D17E8A7F6D386327",
   },
   {
-    name: "Agendamento Sal\u00e3o e Cl\u00ednica",
+    name: "Agendamento Salão e Clínica",
     tag: "Clínicas & Distribuidores",
     desc: "Pré-triagem, agendamento de consulta e consentimento LGPD.",
     icon: Stethoscope,
@@ -79,7 +79,6 @@ export default function Index() {
         <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
           <a href="#agentes" className="hover:text-foreground transition-colors">Agentes</a>
           <a href="#crm" className="hover:text-foreground transition-colors">CRM</a>
-          <a href="#seguranca" className="hover:text-foreground transition-colors">Segurança</a>
         </nav>
         <ThemeSwitcher />
         <Link
@@ -91,7 +90,7 @@ export default function Index() {
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 mx-auto max-w-7xl px-6 pt-16 pb-24 text-center md:pt-24">
+      <section className="relative z-10 mx-auto max-w-7xl px-6 pt-16 pb-12 text-center md:pt-24">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 text-xs uppercase tracking-widest text-primary">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
           Online 24 horas — Rio de Janeiro
@@ -103,41 +102,18 @@ export default function Index() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          4 agentes inteligentes por nicho. Captura de pedidos, agendamento de entregas
-          e consultas, com CRM e gráficos por região — tudo em conformidade com a LGPD.
+          Captura de pedidos, agendamento de entregas e consultas, com CRM e gráficos.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="#agentes"
-            className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-medium text-primary-foreground transition-all hover:shadow-[var(--shadow-glow)]"
-          >
-            Escolher um agente
-            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-          <a
-            href="#crm"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 font-medium text-foreground backdrop-blur transition-all hover:bg-card"
-          >
-            <BarChart3 className="h-4 w-4" /> Ver CRM
-          </a>
-        </div>
-
-        {/* trust strip */}
-        <div className="mx-auto mt-14 grid max-w-3xl grid-cols-3 gap-6 text-left">
-          {[
-            { icon: Clock, label: "24/7", sub: "sempre online" },
-            { icon: MapPin, label: "Por região", sub: "bairro & CEP" },
-            { icon: ShieldCheck, label: "LGPD", sub: "consentimento" },
-          ].map(({ icon: Icon, label, sub }) => (
-            <div key={label} className="card-3d flex items-center gap-3 p-4">
-              <Icon className="h-5 w-5" style={{ color: '#2E8B57' }} />
-              <div>
-                <div className="text-sm font-semibold" style={{ color: '#FFFAF0' }}>{label}</div>
-                <div className="text-xs" style={{ color: '#A9A9A9' }}>{sub}</div>
-              </div>
+        {/* trust strip — apenas 24/7 */}
+        <div className="mx-auto mt-10 flex justify-center">
+          <div className="card-3d flex items-center gap-3 p-4">
+            <Clock className="h-5 w-5" style={{ color: '#2E8B57' }} />
+            <div>
+              <div className="text-sm font-semibold" style={{ color: '#FFFAF0' }}>24/7</div>
+              <div className="text-xs" style={{ color: '#A9A9A9' }}>sempre online</div>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
@@ -145,7 +121,6 @@ export default function Index() {
       <section id="agentes" className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
         <div className="mb-10 flex items-end justify-between">
           <div>
-            <div className="text-xs uppercase tracking-widest text-primary">04 agentes</div>
             <h2 className="mt-2 font-display text-3xl font-semibold md:text-4xl">Escolha seu nicho</h2>
           </div>
           <p className="hidden max-w-sm text-sm text-muted-foreground md:block">
@@ -229,23 +204,6 @@ export default function Index() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Security strip */}
-      <section id="seguranca" className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            { t: "Segurança nativa", d: "HTTPS, RLS no banco, JWT e webhook tokenizado desde o dia 1." },
-            { t: "Conformidade LGPD", d: "Aviso de coleta, consentimento explícito e exclusão de dados." },
-            { t: "Multi-tenant", d: "Cada cliente isolado, com auditoria de acesso ao CRM." },
-          ].map((b) => (
-            <div key={b.t} className="rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur">
-              <ShieldCheck className="h-5 w-5 text-primary" />
-              <h3 className="mt-4 font-display text-lg font-semibold">{b.t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{b.d}</p>
-            </div>
-          ))}
         </div>
       </section>
 
