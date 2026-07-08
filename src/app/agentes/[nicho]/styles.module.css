@@ -72,5 +72,6 @@
   width: 420px;
   max-width: none;
   height: 100%;
-  border: none;
+  border: 4px solid #cccccc;
+  border-radius: 12px;
 }
