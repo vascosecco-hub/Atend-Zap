@@ -13,7 +13,7 @@ const agents = [
     textDark: '#3A1F00',
     iconBg: '#FFE082',
     iconPath: 'M12 3L4 9v12h16V9l-8-6zm0 2.5L18 10v9H6v-9l6-4.5zM11 13h2v5h-2v-5z',
-    widgetUrl: 'https://app.gptmaker.ai/widget/3E721790B13ED228D55A6E943545A768/float.js',
+    widgetUrl: 'https://app.gptmaker.ai/widget/3E7ABBD10E50B14C339A728E885DA344/float.js',
   },
   {
     number: '02',
