@@ -19,7 +19,7 @@ const agents = [
     desc: "Cotação rápida, lista de materiais e agendamento de entrega por bairro.",
     icon: HardHat,
     accent: "from-amber-400/30 to-amber-600/0",
-    gptId: "3E721790B13ED228D55A6E943545A768",
+    gptId: "3E7ABBD10E50B14C339A728E885DA344",
   },
   {
     name: "Gastronomia",

@@ -19,7 +19,7 @@ const AGENTS: Record<string, {
     gradientLight: 'rgba(255, 200, 60, 0.9)',
     textDark: '#3A1F00',
     iconBg: '#FFE082',
-    iframeSrc: 'https://app.gptmaker.ai/widget/3E721790B13ED228D55A6E943545A768/iframe',
+    iframeSrc: 'https://app.gptmaker.ai/widget/3E7ABBD10E50B14C339A728E885DA344/iframe',
     iconPath: 'M12 3L4 9v12h16V9l-8-6zm0 2.5L18 10v9H6v-9l6-4.5zM11 13h2v5h-2v-5z',
   },
   gastronomia: {
